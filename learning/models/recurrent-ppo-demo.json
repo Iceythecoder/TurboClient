@@ -1,0 +1,27 @@
+{
+  "schema": "orion-style-v1",
+  "features": [
+    "protection",
+    "local_hp",
+    "prayer_points",
+    "opponent_hp_percent",
+    "distance",
+    "can_barrage",
+    "attack_ready",
+    "magic_available",
+    "ranged_available",
+    "melee_available"
+  ],
+  "actions": [
+    "WAIT",
+    "MAGIC",
+    "RANGED",
+    "MELEE"
+  ],
+  "algorithm": "RecurrentPPO",
+  "environment": "toy-counter-v1",
+  "live_control": false,
+  "training_steps": 4096,
+  "demo_legal_action_rate": 0.609375,
+  "description": "Toy counter-selection policy. Not trained or validated for Orion PvP."
+}

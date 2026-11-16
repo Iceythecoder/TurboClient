@@ -1,0 +1,172 @@
+import type { VisibleEquipment, VisibleEquipmentItem } from "../clientView";
+
+const item = (itemId: number, name: string): VisibleEquipmentItem => ({ itemId, name });
+
+export const canonicalNhGear = {
+  helmOfNeitiznot: item(10828, "Helm of neitiznot"),
+  barrowsGloves: item(7462, "Barrows gloves"),
+  dragonBoots: item(11840, "Dragon boots"),
+  seersRingI: item(11770, "Seers ring (i)"),
+  dragonstoneDragonBolts: item(21948, "Dragonstone dragon bolts (e)"),
+  opalDragonBolts: item(21932, "Opal dragon bolts (e)"),
+
+  kodaiWand: item(21006, "Kodai wand"),
+  ancientStaff: item(4675, "Ancient staff"),
+  staffOfTheDead: item(11791, "Staff of the dead"),
+  imbuedSaradominCape: item(21791, "Imbued saradomin cape"),
+  amuletOfFury: item(6585, "Amulet of fury"),
+  occultNecklace: item(12002, "Occult necklace"),
+  mysticRobeTop: item(4091, "Mystic robe top"),
+  mysticRobeBottom: item(4093, "Mystic robe bottom"),
+  ahrimsRobetop: item(4712, "Ahrim's robetop"),
+  blessedSpiritShield: item(12831, "Blessed spirit shield"),
+  magesBook: item(6889, "Mage's book"),
+  ahrimsRobeskirt: item(4714, "Ahrim's robeskirt"),
+
+  armadylCrossbow: item(11785, "Armadyl crossbow"),
+  runeCrossbow: item(9185, "Rune crossbow"),
+  magicShortbow: item(861, "Magic shortbow"),
+  dragonCrossbow: item(21902, "Dragon crossbow"),
+  webweaverBow: item(27652, "Webweaver bow (u)"),
+  elderMaul: item(21003, "Elder maul"),
+  graniteMaulOrnateHandle: item(24225, "Granite maul (ornate handle)"),
+  ultorRing: item(28307, "Ultor ring"),
+  ringOfRecoil: item(2550, "Ring of recoil"),
+  fremennikKilt: item(23246, "Fremennik kilt"),
+  amuletOfRancour: item(29801, "Amulet of rancour"),
+  infernalCape: item(21295, "Infernal cape"),
+  summerPie: item(7218, "Summer pie"),
+  halibut: item(32336, "Halibut"),
+  marlin: item(32352, "Marlin"),
+  astralRune: item(9075, "Astral rune"),
+  deathRune: item(560, "Death rune"),
+  earthRune: item(557, "Earth rune"),
+  superRanging4: item(11722, "Super ranging (4)"),
+  avasAssembler: item(22109, "Ava's assembler"),
+  necklaceOfAnguish: item(19547, "Necklace of anguish"),
+  karilsLeathertop: item(4736, "Karil's leathertop"),
+  veracsPlateskirt: item(4759, "Verac's plateskirt"),
+  armadylChestplate: item(11828, "Armadyl chestplate"),
+  armadylChainskirt: item(11830, "Armadyl chainskirt"),
+
+  abyssalTentacle: item(12006, "Abyssal tentacle"),
+  abyssalWhip: item(4151, "Abyssal whip"),
+  dragonDefender: item(12954, "Dragon defender"),
+  avernicDefender: item(22322, "Avernic defender"),
+  noxiousHalberd: item(29796, "Noxious halberd"),
+  zurielsStaff: item(22647, "Zuriel's staff (Deadman Mode)"),
+  zaryteCrossbow: item(26374, "Zaryte crossbow"),
+  voidwaker: item(27690, "Voidwaker"),
+  vestaLongsword: item(22613, "Vesta's longsword (Deadman Mode)"),
+  torvaFullHelm: item(26382, "Torva full helm"),
+  torvaPlatelegs: item(26386, "Torva platelegs"),
+  virtusRobeTop: item(26243, "Virtus robe top"),
+  virtusRobeBottom: item(26245, "Virtus robe bottom"),
+  masoriBodyF: item(27238, "Masori body (f)"),
+  elidinisWardF: item(27251, "Elidinis' ward (f)"),
+  dragonfireShield: item(11283, "Dragonfire shield"),
+  onyxDragonBoltsE: item(21950, "Onyx dragon bolts (e)"),
+  avernicTreadsMax: item(31097, "Avernic treads (max)"),
+  conflictionGauntlets: item(31106, "Confliction gauntlets"),
+  fireCape: item(6570, "Fire cape"),
+  amuletOfTorture: item(19553, "Amulet of torture"),
+  bandosChestplate: item(11832, "Bandos chestplate"),
+  bandosTassets: item(11834, "Bandos tassets"),
+  armadylGodsword: item(11802, "Armadyl godsword"),
+  graniteMaul: item(4153, "Granite maul")
+} as const;
+
+const commonNhEquipment = {
+  head: canonicalNhGear.helmOfNeitiznot,
+  cape: canonicalNhGear.imbuedSaradominCape,
+  amulet: canonicalNhGear.amuletOfFury,
+  hands: canonicalNhGear.barrowsGloves,
+  feet: canonicalNhGear.dragonBoots,
+  ring: canonicalNhGear.seersRingI,
+  ammo: canonicalNhGear.opalDragonBolts
+} as const;
+
+export const canonicalNhLoadoutEquipment = {
+  "kodai-robes": {
+    ...commonNhEquipment,
+    weapon: canonicalNhGear.staffOfTheDead,
+    body: canonicalNhGear.mysticRobeTop,
+    shield: canonicalNhGear.blessedSpiritShield,
+    legs: canonicalNhGear.mysticRobeBottom
+  },
+  "acb-hides": {
+    ...commonNhEquipment,
+    weapon: canonicalNhGear.dragonCrossbow,
+    body: canonicalNhGear.karilsLeathertop,
+    shield: canonicalNhGear.blessedSpiritShield,
+    legs: canonicalNhGear.veracsPlateskirt
+  },
+  "tentacle-bandos": {
+    ...commonNhEquipment,
+    weapon: canonicalNhGear.abyssalTentacle,
+    body: canonicalNhGear.karilsLeathertop,
+    shield: canonicalNhGear.avernicDefender,
+    legs: canonicalNhGear.veracsPlateskirt
+  },
+  "ags-bandos": {
+    ...commonNhEquipment,
+    weapon: canonicalNhGear.armadylGodsword,
+    body: canonicalNhGear.karilsLeathertop,
+    legs: canonicalNhGear.veracsPlateskirt
+  },
+  "gmaul-bandos": {
+    ...commonNhEquipment,
+    weapon: canonicalNhGear.graniteMaul,
+    body: canonicalNhGear.karilsLeathertop,
+    legs: canonicalNhGear.veracsPlateskirt
+  },
+  "noxious-halberd": {
+    ...commonNhEquipment,
+    weapon: canonicalNhGear.noxiousHalberd,
+    cape: canonicalNhGear.fireCape,
+    amulet: canonicalNhGear.amuletOfTorture,
+    body: canonicalNhGear.bandosChestplate,
+    legs: canonicalNhGear.bandosTassets
+  }
+} as const satisfies Readonly<Record<string, VisibleEquipment>>;
+
+export const canonicalNhLoadoutItemIds = {
+  "kodai-robes": [10828, 21791, 6585, 11791, 4091, 12831, 4093, 7462, 11840, 11770, 21932],
+  "acb-hides": [10828, 21791, 6585, 21902, 4736, 12831, 4759, 7462, 11840, 11770, 21932],
+  "tentacle-bandos": [10828, 21791, 6585, 12006, 4736, 22322, 4759, 7462, 11840, 11770, 21932],
+  "ags-bandos": [10828, 21791, 6585, 11802, 4736, 4759, 7462, 11840, 11770, 21932],
+  "gmaul-bandos": [10828, 21791, 6585, 4153, 4736, 4759, 7462, 11840, 11770, 21932],
+  "noxious-halberd": [10828, 6570, 19553, 29796, 11832, 11834, 7462, 11840, 11770, 21932]
+} as const;
+
+export const canonicalNhSwitchItemIds = [
+  10828,
+  21791,
+  6585,
+  4675,
+  11791,
+  4091,
+  12831,
+  4093,
+  7462,
+  11840,
+  11770,
+  21932,
+  11785,
+  9185,
+  861,
+  21902,
+  26374,
+  4736,
+  4759,
+  12006,
+  4151,
+  29796,
+  22647,
+  27690,
+  22613,
+  12954,
+  22322,
+  11802,
+  4153
+] as const;

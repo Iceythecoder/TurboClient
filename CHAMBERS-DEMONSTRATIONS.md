@@ -1,0 +1,32 @@
+# Test a real Orion demonstration
+
+Restart OrionNH.exe. Open Chambers > Open Chambers teaching window > Learn. The main Chambers window is now a compact dashboard; the learning controls open separately. Advanced settings retains the observation and projectile configuration tools.
+
+The small always-on-top STOP (F9) window is movable: drag its title bar or the Drag to move handle to any screen location. Its position is kept only for that dashboard session. Clicking STOP stops recording and this application's combat/prayer outputs while preserving demonstration data. Closing the floating control also stops first. Reopening Learn or clicking Run bot shows it again. F9 works while the application has keyboard focus; it is not a system-wide hotkey.
+
+Run bot now starts a separate configured rule-based Olm baseline, documented in [OLM-BASELINE.md](OLM-BASELINE.md). It requires a verified Orion profile and equipment setup. The exemplar learner remains suggestion-only; learning a demonstration does not itself configure or validate the baseline. Entry needs a real entry interaction, and special responses require calibrated Orion IDs; see [OLM-SPECIALS.md](OLM-SPECIALS.md). Do not treat the baseline as a validated full raid solver.
+
+1. Log into Orion and enter Chambers yourself. For this recorder, being in Chambers is your manual assertion, not an automatically verified fact. You do not need projectile IDs or region configuration to record. Start only when you want gameplay captured.
+2. Click Start demonstration. This stops this application's PvP and prayer automation, and blocks re-arming them during recording. It does not disable unrelated external tools; do not run those while demonstrating. Play manually and check that frame/action counts increase and Last recorded reflects your actions.
+3. Use the neck selector to label a confirmed green glow (phase 3), a clearly visible neck without green glow (regular phase), or unknown. Add short teaching markers for transitions, mistakes, successes or important mechanics. Labels apply from that point forward, not retroactively. Free-text markers are recorded for review; the learner does not interpret their prose.
+4. After your run, wait one game tick after the last action, then Stop recording. F9, logout, client-observation errors and the memory limits also stop recording and preserve what was captured. Closing the teaching window stops recording but retains the dataset in the running companion.
+5. Click Learn from demonstration. At least five permitted action events with a following tick are needed. This creates a local nearest-example imitation model from your real run, not a scripted replacement, pretrained neural network or simulator. During subsequent live observations it displays similar demonstrated actions or abstains. It never executes them.
+6. Click Save demonstration to retain the JSON on disk at a location you choose. This includes observations, action intentions, next-tick observations, markers and the number of learned examples. Load demonstration restores that data after a restart; click Learn again to rebuild the exemplar model. Save first, then Discard demonstration + model before recording/loading another run. Replacing an existing file requires confirmation.
+
+## What is captured
+
+At each GameTick and immediately before a permitted menu event: tick/cycle, local template coordinates, current HP/prayer/combat levels, animation, inventory/equipment item IDs and quantities, up to 32 nearby NPC IDs/positions/animations/approximate health bars, and up to 32 projectiles currently targeting the local player with estimated cycles remaining. Actions include numeric menu parameters, selected item/NPC IDs, and a fixed allowed action verb. The first subsequent tick is attached as an outcome observation; it does not prove that the action succeeded or caused the change. Snapshot sampling can miss brief projectiles and effects between samples. Walking tile parameters are scene-relative and are not instructions to replay blindly.
+
+The menu allowlist covers supported walk, NPC/object, equipment, supplies, prayer and widget interactions. Player interactions, chat, raw menu-target text, player names, account credentials, screenshots and video are excluded. Unsupported verbs are skipped. If actions stay at zero, stop and report which normal interaction was missed; do not assume the demonstration is usable.
+
+## Learning limits
+
+The model retrieves demonstrated state/action pairs by similarity using region, plane, manual phase, coordinates, HP/prayer/boosted levels, animations, NPC composition/approximate health, projectile ID and inventory/equipment. Unseen regions/planes/phase labels or distant states cause abstention. It has no learned raid sequence, no waiting/timing policy, no reward optimization and no independently measured performance. Ties choose the earliest matching example, so conflicting demonstrations can yield poor suggestions. It does not infer green neck glow from pixels, distinguish all mechanics, or understand your notes. One successful demonstration cannot establish autonomous raid competence. The next milestone is reviewing predictions and errors across multiple encounters, not automatically executing recorded clicks.
+
+## Privacy and lifecycle
+
+Data stays local in bounded memory: 12,000 tick frames, 16,000 action events and 200 short markers. Limits stop rather than silently overwrite. Saving is explicit; no recording is uploaded or automatically cached/logged. User-written marker text is included in an explicit saved export, so avoid adding personal information. Loading accepts a bounded, schema-checked JSON demonstration and never executes its contents. Discard clears this session's data/model. Closing the main companion clears them; unsaved data is lost. Explicitly saved files remain until you remove them. No claim of secure erasure is made.
+
+## Checks performed
+
+ChambersDemonstrationTests records synthetic menu events into a mock installed API, pairs actions with next-tick states, learns distinct low/high-HP examples, checks predictions and abstention, round-trips JSON in memory, rejects invalid schemas, and checks privacy, overwrite guards and logout. Existing API/controller checks and UI smoke rendering also run. No real user demonstration or live raid was performed during implementation; live event coverage needs your test run.

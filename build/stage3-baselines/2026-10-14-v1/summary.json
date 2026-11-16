@@ -1,0 +1,17 @@
+{
+  "fights": 50,
+  "outcomes": {
+    "draw": 19,
+    "win": 31
+  },
+  "steps": 11619,
+  "execution_rejections": {
+    "potion-delay": 9
+  },
+  "preflight_rejections": 0,
+  "deadline_misses": 0,
+  "confirmed_attacks": 2174,
+  "damage_dealt": 19960,
+  "damage_received": 9361,
+  "decision_ms_max": 11.783599999034777
+}

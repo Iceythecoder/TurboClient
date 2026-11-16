@@ -1,0 +1,17 @@
+{
+  "fights": 50,
+  "outcomes": {
+    "draw": 19,
+    "win": 31
+  },
+  "steps": 11296,
+  "execution_rejections": {},
+  "preflight_rejections": 0,
+  "deadline_misses": 0,
+  "confirmed_attacks": 2067,
+  "damage_dealt": 19668,
+  "damage_received": 10237,
+  "decision_ms_max": 7.740999979432672,
+  "wasted_supply_uses": 0,
+  "longest_attack_gap_ticks": 12
+}

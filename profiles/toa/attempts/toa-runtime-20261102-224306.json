@@ -1,0 +1,621 @@
+{
+  "schema": "turbo-toa-runtime-v1",
+  "startedAt": "2026-11-02T22:43:06.389561400Z",
+  "endedAt": "2026-11-02T22:43:11.891945800Z",
+  "reason": "User stopped the ToA prototype",
+  "state": "PREPARING",
+  "containsPlayerNames": false,
+  "events": [
+    {
+      "type": "STATE_CHANGED",
+      "tick": 19838,
+      "from": "IDLE",
+      "to": "PREPARING"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 19838,
+      "cycle": 598872,
+      "ownerNpcId": -1,
+      "ownerNpcName": "null",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 19838,
+      "cycle": 598872,
+      "ownerNpcId": -1,
+      "ownerNpcName": "null",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 19838,
+      "cycle": 598872,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 7211,
+          "name": "null",
+          "index": 3802,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2766,
+            3251,
+            0
+          ]
+        },
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3259,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 19839,
+      "cycle": 598903,
+      "ownerNpcId": 12421,
+      "ownerNpcName": "ferros",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 19839,
+      "cycle": 598903,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 7211,
+          "name": "null",
+          "index": 3802,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2767,
+            3250,
+            0
+          ]
+        },
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2752,
+            3260,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19840,
+      "cycle": 598932,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 7211,
+          "name": "null",
+          "index": 3802,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2768,
+            3249,
+            0
+          ]
+        },
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 19841,
+      "cycle": 598962,
+      "ownerNpcId": -1,
+      "ownerNpcName": "null",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 19841,
+      "cycle": 598962,
+      "ownerNpcId": -1,
+      "ownerNpcName": "null",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 19841,
+      "cycle": 598962,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2738,
+            3256,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19842,
+      "cycle": 598992,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2738,
+            3256,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19843,
+      "cycle": 599022,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2738,
+            3256,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19844,
+      "cycle": 599052,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2739,
+            3256,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19845,
+      "cycle": 599083,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2739,
+            3256,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19846,
+      "cycle": 599112,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2739,
+            3256,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "type": "FRAME",
+      "tick": 19847,
+      "cycle": 599142,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        2753,
+        3259,
+        0
+      ],
+      "hp": 104,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 12421,
+          "name": "ferros",
+          "index": 19,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            2753,
+            3260,
+            0
+          ]
+        },
+        {
+          "id": 465,
+          "name": "skeletal wyvern",
+          "index": 1090,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": true,
+          "beginAvailable": false,
+          "position": [
+            2739,
+            3256,
+            0
+          ]
+        }
+      ]
+    }
+  ]
+}

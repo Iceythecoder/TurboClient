@@ -1,0 +1,13 @@
+SLAYER_DIAGNOSTIC_V2
+event=STOP Test cleanup
+tick=10
+kills=0
+goal=2
+running=true
+hp=0
+prayer=0
+automaticProfile=false
+profiledNpcId=10
+attackStyle=none
+offensivePrayer=none
+defensivePrayer=none

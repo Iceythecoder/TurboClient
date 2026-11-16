@@ -1,0 +1,1429 @@
+{
+  "schema": "turbo-toa-runtime-v1",
+  "startedAt": "2026-11-06T15:17:17.172269300Z",
+  "endedAt": "2026-11-06T15:17:23.815996500Z",
+  "reason": "Companion reload",
+  "state": "PREPARING",
+  "containsPlayerNames": false,
+  "events": [
+    {
+      "type": "BUILD",
+      "tick": 11336,
+      "tag": "toa-warden-prayer-core-v2"
+    },
+    {
+      "type": "STATE_CHANGED",
+      "tick": 11336,
+      "from": "IDLE",
+      "to": "PREPARING"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11336,
+      "decision": "DRINK overload",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11336,
+      "cycle": 340784,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 99,
+      "prayer": 99,
+      "attack": 99,
+      "strength": 99,
+      "defence": 99,
+      "ranged": 99,
+      "magic": 99,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DECISION",
+      "tick": 11337,
+      "decision": "WAIT Waiting for observed overload dose decrease",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11337,
+      "cycle": 340814,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 829,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11337,
+      "decision": "WAIT Shared potion cooldown",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11337,
+      "cycle": 340814,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 99,
+      "prayer": 99,
+      "attack": 120,
+      "strength": 120,
+      "defence": 120,
+      "ranged": 120,
+      "magic": 120,
+      "animation": 829,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11338,
+      "cycle": 340844,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 560,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11338,
+      "cycle": 340844,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 3170,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11338,
+      "cycle": 340844,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 89,
+      "prayer": 99,
+      "attack": 120,
+      "strength": 120,
+      "defence": 120,
+      "ranged": 120,
+      "magic": 120,
+      "animation": 3170,
+      "graphic": 560,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11339,
+      "cycle": 340864,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11339,
+      "cycle": 340864,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11339,
+      "cycle": 340874,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 89,
+      "prayer": 99,
+      "attack": 120,
+      "strength": 120,
+      "defence": 120,
+      "ranged": 120,
+      "magic": 120,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DECISION",
+      "tick": 11340,
+      "decision": "DRINK aid",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11340,
+      "decision": "WAIT Waiting for observed aid dose decrease",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11340,
+      "cycle": 340904,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 560,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11340,
+      "cycle": 340904,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 3170,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11340,
+      "decision": "WAIT Shared potion cooldown",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11340,
+      "cycle": 340904,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 99,
+      "prayer": 99,
+      "attack": 106,
+      "strength": 106,
+      "defence": 123,
+      "ranged": 106,
+      "magic": 106,
+      "animation": 3170,
+      "graphic": 560,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11341,
+      "cycle": 340924,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11341,
+      "cycle": 340924,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11341,
+      "cycle": 340934,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 99,
+      "prayer": 99,
+      "attack": 106,
+      "strength": 106,
+      "defence": 123,
+      "ranged": 106,
+      "magic": 106,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11342,
+      "cycle": 340964,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 560,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11342,
+      "cycle": 340964,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 3170,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11342,
+      "cycle": 340964,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 89,
+      "prayer": 99,
+      "attack": 106,
+      "strength": 106,
+      "defence": 123,
+      "ranged": 106,
+      "magic": 106,
+      "animation": 3170,
+      "graphic": 560,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DECISION",
+      "tick": 11343,
+      "decision": "DRINK aid",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11343,
+      "decision": "WAIT Waiting for observed aid dose decrease",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11343,
+      "cycle": 340984,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11343,
+      "cycle": 340984,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11343,
+      "cycle": 340994,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 829,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11343,
+      "decision": "WAIT Shared potion cooldown",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11343,
+      "cycle": 340994,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 109,
+      "prayer": 99,
+      "attack": 94,
+      "strength": 94,
+      "defence": 123,
+      "ranged": 94,
+      "magic": 94,
+      "animation": 829,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11344,
+      "cycle": 341024,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 560,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11344,
+      "cycle": 341024,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 3170,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11344,
+      "cycle": 341024,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 99,
+      "prayer": 99,
+      "attack": 94,
+      "strength": 94,
+      "defence": 123,
+      "ranged": 94,
+      "magic": 94,
+      "animation": 3170,
+      "graphic": 560,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11345,
+      "cycle": 341044,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11345,
+      "cycle": 341044,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": -1,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11345,
+      "cycle": 341054,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 99,
+      "prayer": 99,
+      "attack": 94,
+      "strength": 94,
+      "defence": 123,
+      "ranged": 94,
+      "magic": 94,
+      "animation": -1,
+      "graphic": -1,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "type": "DECISION",
+      "tick": 11346,
+      "decision": "DRINK aid",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11346,
+      "decision": "WAIT Waiting for observed aid dose decrease",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "GRAPHIC",
+      "tick": 11346,
+      "cycle": 341084,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 560,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "ANIMATION",
+      "tick": 11346,
+      "cycle": 341084,
+      "ownerNpcId": -1,
+      "ownerNpcName": "local-player",
+      "id": 3170,
+      "phase": "BEGIN"
+    },
+    {
+      "type": "DECISION",
+      "tick": 11346,
+      "decision": "WAIT Shared potion cooldown",
+      "phase": "BEGIN",
+      "state": "PREPARING"
+    },
+    {
+      "type": "FRAME",
+      "tick": 11346,
+      "cycle": 341084,
+      "state": "PREPARING",
+      "phase": "BEGIN",
+      "position": [
+        3810,
+        5159,
+        1
+      ],
+      "hp": 109,
+      "prayer": 99,
+      "attack": 83,
+      "strength": 83,
+      "defence": 123,
+      "ranged": 83,
+      "magic": 83,
+      "animation": 3170,
+      "graphic": 560,
+      "activePrayers": [],
+      "npcs": [
+        {
+          "id": 11746,
+          "name": "elidinis\u0027 warden",
+          "index": 4997,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6648,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 11750,
+          "name": "obelisk",
+          "index": 4659,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6663,
+            9161,
+            1
+          ]
+        },
+        {
+          "id": 11690,
+          "name": "osmumten",
+          "index": 2776,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": true,
+          "position": [
+            6664,
+            9166,
+            1
+          ]
+        },
+        {
+          "id": 11747,
+          "name": "tumeken\u0027s warden",
+          "index": 5036,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6676,
+            9160,
+            1
+          ]
+        },
+        {
+          "id": 6626,
+          "name": "dagannoth supreme jr.",
+          "index": 283,
+          "animation": -1,
+          "graphic": -1,
+          "healthRatio": -1,
+          "healthScale": -1,
+          "attackable": false,
+          "beginAvailable": false,
+          "position": [
+            6666,
+            9168,
+            1
+          ]
+        }
+      ]
+    }
+  ]
+}

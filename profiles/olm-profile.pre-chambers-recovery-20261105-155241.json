@@ -1,0 +1,217 @@
+{
+  "verifiedForOrion": true,
+  "magicAutocastVerified": true,
+  "provisionalTest": true,
+  "offensivePrayersEnabled": true,
+  "eatAtHp": 80,
+  "headAttackRange": 10,
+  "finishRaidAutomatically": true,
+  "excludedRangedGear": [
+    13237
+  ],
+  "rewardChestObjectId": 30028,
+  "raidExitObjectId": -1,
+  "rewardContainerWidgetId": 35323909,
+  "offensivePrayers": {
+    "MAGIC": "AUGURY",
+    "MELEE": "PIETY",
+    "RANGED": "RIGOUR"
+  },
+  "attackAnimations": {},
+  "weaponAttackTicks": {
+    "holy cards": 2,
+    "eye of ayak": 2,
+    "twisted bow": 4
+  },
+  "mageApproaches": {},
+  "meleeApproaches": {},
+  "chamberRegions": [
+    12889
+  ],
+  "olmRegions": [
+    12889
+  ],
+  "mageHands": [
+    7553
+  ],
+  "meleeHands": [
+    7555
+  ],
+  "heads": [
+    7554
+  ],
+  "entryObjectId": -1,
+  "entryAction": "Enter",
+  "plane": 0,
+  "potionCooldownTicks": 3,
+  "finalHandFinishWindowTicks": 50,
+  "roomMinX": 3228,
+  "roomMaxX": 3237,
+  "roomMinY": 5731,
+  "roomMaxY": 5747,
+  "headNpcPhases": {},
+  "specialProjectiles": {
+    "1341": "Unclassified observed projectile",
+    "1343": "Unclassified observed projectile",
+    "1345": "Unclassified observed projectile",
+    "1349": "Burning candidate from installed ProjectileID constant"
+  },
+  "supplies": {
+    "overload": [
+      20996,
+      20995,
+      20994,
+      20993
+    ],
+    "enhance": [
+      20972,
+      20971,
+      20970,
+      20969
+    ],
+    "aid": [
+      20984,
+      20983,
+      20982,
+      20981
+    ],
+    "revitalisation": [
+      20960,
+      20959,
+      20958,
+      20957
+    ]
+  },
+  "normalProjectiles": {
+    "1339": "MAGIC",
+    "1340": "RANGED"
+  },
+  "mechanics": {
+    "orbProjectiles": {},
+    "underfootObjects": [],
+    "underfootNpcs": [],
+    "underfootGraphics": [],
+    "fallingProjectiles": [],
+    "fallingGraphics": [],
+    "wallObjects": [],
+    "wallNpcs": [],
+    "underfootRadius": 0,
+    "fallingRadius": 0,
+    "maxStep": 1,
+    "projectileDestinationsVerified": false,
+    "tickWalkInHead": true,
+    "wallInteractionVerified": false,
+    "holdSafeTile": true,
+    "useOrionCrystalSignals": true,
+    "healingPoolsEnabled": true,
+    "healingPoolProjectiles": [
+      1355
+    ],
+    "healingPoolGraphics": [
+      1363
+    ],
+    "orionActorCrystal2856Verified": false,
+    "exactLightningTiles": true,
+    "runAcrossLightning": true,
+    "lightningCrossingTimingVerified": false,
+    "useInstalledCrystalSignals": true,
+    "autoNamedFlameWalls": true,
+    "useStandardOrbSignals": true,
+    "useStandardFirewallNpc": true,
+    "useInstalledSpecialSignals": true,
+    "bombRadius": 4,
+    "electricRadius": 1,
+    "bombObjects": [],
+    "bombNpcs": [],
+    "bombGraphics": [],
+    "electricObjects": [],
+    "electricNpcs": [],
+    "electricGraphics": [],
+    "wallMode": "UNCONFIGURED",
+    "lunarSpell": "",
+    "wallAction": "AUTO"
+  },
+  "schema": "orion-olm-learned-preset-v1",
+  "observedGear": {
+    "MAGIC": [
+      21018,
+      21791,
+      12002,
+      31784,
+      24666,
+      25985,
+      21024,
+      19544,
+      31781,
+      20223,
+      11770
+    ],
+    "MELEE": [
+      26382,
+      21295,
+      24780,
+      22616,
+      22619,
+      11773,
+      22981,
+      31781,
+      20223,
+      22325
+    ],
+    "RANGED": [
+      27235,
+      22109,
+      19547,
+      27645,
+      27238,
+      27241,
+      26235,
+      31781,
+      20223,
+      11771
+    ],
+    "SPEC": [
+      26382,
+      21295,
+      24780,
+      21003,
+      22616,
+      22619,
+      11773,
+      22981,
+      31781,
+      20223
+    ]
+  },
+  "targetCorrections": {},
+  "attackSpeeds": {
+    "MAGIC": 5,
+    "RANGED": 4,
+    "MELEE": 4,
+    "SPEC": 4
+  },
+  "actionTiming": {
+    "timings": {},
+    "confirmed": 0,
+    "timeouts": 0
+  },
+  "movementLearning": {
+    "schema": "olm-movement-learning-v1",
+    "meaning": "Movement arrivals/failures with explicit user corrections; not damage causality",
+    "scores": {}
+  },
+  "prayerTiming": {
+    "version": 1,
+    "marginCycles": 5,
+    "ackSamples": 0,
+    "ackMaxCycles": 0,
+    "tracked": 0,
+    "timely": 0,
+    "late": 0,
+    "unobserved": 0,
+    "unknown": 0,
+    "conflicts": 0,
+    "damageEvents": 0,
+    "damageAmount": 0
+  }
+}

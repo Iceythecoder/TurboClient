@@ -1,0 +1,963 @@
+Build a complete automated NH-PKing combat tool for the Orion private server.
+
+PURPOSE
+
+The tool should automatically control NH PvP combat against the player's current opponent.
+
+It should operate as a tick-aware combat state machine capable of:
+
+- Detecting and maintaining the current PvP opponent.
+- Reading the opponent's overhead protection prayer.
+- Automatically choosing an appropriate combat style.
+- Switching between user-configured Melee, Ranged and Magic gear.
+- Automatically switching offensive prayers.
+- Automatically switching defensive protection prayers based on the opponent's current attack style/gear.
+- Casting Ice Barrage when appropriate.
+- Performing ranged attacks when appropriate.
+- Performing melee attacks when appropriate.
+- Handling special attacks according to configurable rules.
+- Switching gear and attacking within one game tick when possible.
+- Detecting freezes and freeze timers.
+- Detecting whether the local player or opponent can move.
+- Tracking attack cooldowns.
+- Avoiding redundant gear/prayer/spell clicks.
+- Maintaining the same target throughout an action sequence.
+- Providing detailed debugging/timing telemetry.
+
+Do NOT build the program as one giant sequence of sleeps and clicks.
+
+Use a modular event-driven finite-state architecture driven primarily by game ticks and client state.
+
+==================================================
+1. MAIN MODULES
+==================================================
+
+Create separate modules/services:
+
+TargetManager
+OpponentStateTracker
+LocalPlayerStateTracker
+TickManager
+GearManager
+PrayerManager
+SpellManager
+AttackManager
+FreezeManager
+SpecialAttackManager
+DecisionEngine
+ActionScheduler
+ConfigManager
+TelemetryManager
+
+Each module should expose a clean interface.
+
+The DecisionEngine decides WHAT should happen.
+
+The ActionScheduler decides WHEN and in what order the actions should happen.
+
+==================================================
+2. TICK ENGINE
+==================================================
+
+Assume:
+
+GAME_TICK_MS ≈ 600
+
+Prefer an actual server/client game-tick event if Orion exposes one.
+
+Maintain:
+
+currentTick
+tickStartTimestamp
+millisecondsSinceTickStart
+millisecondsRemaining
+lastAttackTick
+nextAttackTick
+
+Do not depend on arbitrary sleeps such as:
+
+sleep(200)
+click()
+sleep(200)
+click()
+
+Instead schedule actions against game ticks.
+
+Every combat decision should have:
+
+decisionTick
+executionDeadline
+priority
+requiredActions
+
+==================================================
+3. TARGET MANAGER
+==================================================
+
+Maintain a stable reference to the current PvP opponent.
+
+Store:
+
+targetId
+targetName
+targetActor
+targetLocation
+targetHealth
+targetPrayer
+targetEquipment
+targetAnimation
+targetWeapon
+targetAttackStyle
+targetFrozen
+targetFreezeExpiry
+targetLastAttackTick
+
+Never accidentally switch targets in the middle of an action sequence.
+
+Functions:
+
+getCurrentTarget()
+lockTarget()
+unlockTarget()
+isTargetValid()
+isTargetAlive()
+isTargetAttackable()
+
+==================================================
+4. USER-CONFIGURED GEAR SETS
+==================================================
+
+Allow the user to configure:
+
+MAGIC_GEAR
+RANGED_GEAR
+MELEE_GEAR
+SPEC_GEAR
+
+Example:
+
+MAGIC_GEAR = [
+    configured magic weapon,
+    configured magic offhand,
+    configured magic body,
+    configured magic legs,
+    configured magic amulet
+]
+
+RANGED_GEAR = [...]
+
+MELEE_GEAR = [...]
+
+SPEC_GEAR = [...]
+
+Prefer item IDs rather than names.
+
+Only equip items required to transition from the CURRENT equipment into the desired setup.
+
+Example:
+
+switchGear(MAGIC_GEAR)
+
+should:
+
+1. Compare current equipment against MAGIC_GEAR.
+2. Determine which configured items are already equipped.
+3. Find missing items in inventory.
+4. Generate the minimum required switch list.
+5. Equip those items.
+6. Avoid redundant clicks.
+7. Abort cleanly if required equipment is unavailable.
+
+==================================================
+5. OPPONENT PRAYER READING
+==================================================
+
+Continuously determine:
+
+NONE
+PROTECT_FROM_MELEE
+PROTECT_FROM_MISSILES
+PROTECT_FROM_MAGIC
+
+Expose:
+
+getOpponentProtectionPrayer()
+
+Generate events when prayer CHANGES.
+
+Example:
+
+OpponentPrayerChanged(
+    oldPrayer,
+    newPrayer,
+    tick
+)
+
+Prayer transitions should be actionable immediately.
+
+==================================================
+6. OFFENSIVE STYLE SELECTION
+==================================================
+
+Implement configurable counter-prayer logic.
+
+Default logic:
+
+Opponent Protect from Missiles
+    -> prefer MAGIC
+
+Opponent Protect from Magic
+    -> prefer RANGED or MELEE
+
+Opponent Protect from Melee
+    -> prefer MAGIC or RANGED
+
+Opponent has no protection prayer
+    -> choose highest-value available attack
+
+Do NOT constantly alternate styles without reason.
+
+DecisionEngine should calculate a score for:
+
+MAGIC
+RANGED
+MELEE
+
+Possible inputs:
+
+opponent protection prayer
+current equipment
+number of switches required
+attack cooldown
+freeze status
+distance
+special attack energy
+opponent HP
+local HP
+whether opponent is currently frozen
+whether Barrage can be cast
+
+Example:
+
+magicScore
+rangedScore
+meleeScore
+
+Choose:
+
+desiredStyle = max(score)
+
+==================================================
+7. ONE-TICK MAGIC BARRAGE
+==================================================
+
+Critical behavior:
+
+IF opponent switches into PROTECT_FROM_MISSILES:
+
+    lock current target
+
+    determine missing MAGIC_GEAR items
+
+    equip MAGIC_GEAR
+
+    enable configured offensive magic prayer
+
+    select ICE_BARRAGE
+
+    cast on SAME target
+
+Attempt to complete the gear + prayer + spell + target input sequence inside the current actionable tick window.
+
+Sequence:
+
+DETECT PROTECT FROM MISSILES
+        ->
+LOCK TARGET
+        ->
+MAGIC GEAR
+        ->
+MAGIC OFFENSIVE PRAYER
+        ->
+ICE BARRAGE
+        ->
+TARGET
+
+Never cast on a newly discovered target midway through the sequence.
+
+==================================================
+8. RANGED COUNTER
+==================================================
+
+IF opponent protects from Magic:
+
+    consider switching to RANGED_GEAR
+
+Sequence:
+
+lockTarget
+switchGear(RANGED_GEAR)
+activate configured ranged offensive prayer
+attack locked target
+
+Avoid attacking before required equipment actions have been submitted.
+
+==================================================
+9. MELEE COUNTER
+==================================================
+
+IF opponent protects from Magic and melee is strategically preferable:
+
+    switchGear(MELEE_GEAR)
+    activate configured melee offensive prayer
+    attack target
+
+Only select melee when:
+
+target distance permits melee
+OR
+movement/pathing permits reaching target
+OR
+configured strategy explicitly wants melee pressure.
+
+==================================================
+10. DEFENSIVE PRAYER SYSTEM
+==================================================
+
+Predict the opponent's attack style.
+
+Use signals such as:
+
+opponent weapon
+opponent equipment
+opponent animation
+spell selection/cast animation if exposed
+distance
+recent attacks
+known weapon mappings
+
+Classify opponent intent as:
+
+MAGIC_ATTACK
+RANGED_ATTACK
+MELEE_ATTACK
+UNKNOWN
+
+Then use:
+
+MAGIC_ATTACK
+    -> Protect from Magic
+
+RANGED_ATTACK
+    -> Protect from Missiles
+
+MELEE_ATTACK
+    -> Protect from Melee
+
+Do not repeatedly click an already-active prayer.
+
+Track:
+
+currentDefensivePrayer
+predictedOpponentStyle
+predictionConfidence
+
+Make prediction thresholds configurable.
+
+==================================================
+11. FREEZE SYSTEM
+==================================================
+
+Track both:
+
+localPlayerFrozen
+opponentFrozen
+
+Store estimated freeze expiration ticks.
+
+For opponent:
+
+opponentFreezeStartTick
+opponentFreezeDuration
+opponentFreezeExpiryTick
+
+Avoid wasting Barrage solely for refreezing if the opponent is already frozen and the configured strategy says to preserve runes/attack opportunities.
+
+Allow configuration:
+
+REFREEZE_THRESHOLD_TICKS
+
+Example:
+
+If opponent freeze expires within N ticks:
+    increase MAGIC/BARRAGE priority.
+
+==================================================
+12. ATTACK COOLDOWN TRACKING
+==================================================
+
+Track weapon attack speeds.
+
+Maintain:
+
+lastAttackTick
+weaponAttackSpeed
+nextAttackAvailableTick
+
+Do not spam attack commands while the player is still on cooldown.
+
+DecisionEngine should know:
+
+canAttackThisTick()
+
+This is separate from gear switching.
+
+The program may prepare gear before the next valid attack tick.
+
+==================================================
+13. SPECIAL ATTACK ENGINE
+==================================================
+
+Provide configurable spec rules.
+
+Example configuration:
+
+SPEC_ENABLED = true
+
+SPEC_WEAPON = configured weapon
+
+MIN_SPEC_ENERGY = configured value
+
+SPEC_HP_THRESHOLD = configured opponent HP
+
+Rules can consider:
+
+opponent HP
+opponent prayer
+local HP
+distance
+spec energy
+current combat style
+whether target is frozen
+
+Example:
+
+IF:
+    target HP <= configured threshold
+AND:
+    specEnergy >= required energy
+AND:
+    target protection prayer is unfavorable to their expected defense
+THEN:
+    switch SPEC_GEAR
+    activate correct offensive prayer
+    enable special attack
+    attack target
+
+Make the spec logic configurable rather than hard-coded to one weapon.
+
+==================================================
+14. ACTION PRIORITY SYSTEM
+==================================================
+
+Actions need priorities.
+
+Example:
+
+PRIORITY 100:
+    emergency defensive prayer
+
+PRIORITY 90:
+    target validation
+
+PRIORITY 80:
+    protection prayer reaction
+
+PRIORITY 70:
+    offensive gear switch
+
+PRIORITY 60:
+    offensive prayer
+
+PRIORITY 50:
+    spell selection
+
+PRIORITY 40:
+    attack/cast
+
+PRIORITY 30:
+    movement
+
+PRIORITY 10:
+    non-critical UI/debug actions
+
+Prevent contradictory actions from competing during the same tick.
+
+==================================================
+15. ACTION QUEUE
+==================================================
+
+Represent actions explicitly.
+
+Example:
+
+Action {
+    type
+    target
+    priority
+    createdTick
+    deadline
+    preconditions
+}
+
+Possible action types:
+
+EQUIP_ITEM
+ACTIVATE_PRAYER
+SELECT_SPELL
+CAST_SPELL
+ATTACK_TARGET
+ENABLE_SPECIAL
+MOVE
+WAIT
+ABORT_SEQUENCE
+
+Example queue for Barrage:
+
+[
+    EQUIP_MAGIC_WEAPON,
+    EQUIP_MAGIC_BODY,
+    EQUIP_MAGIC_LEGS,
+    ACTIVATE_MAGIC_OFFENSIVE_PRAYER,
+    SELECT_ICE_BARRAGE,
+    CAST_ON_TARGET
+]
+
+Execute in deterministic order.
+
+==================================================
+16. REACTIVE PRAYER SWITCH EXAMPLE
+==================================================
+
+Opponent:
+
+Protect from Melee
+    ->
+Protect from Missiles
+
+Event:
+
+OpponentPrayerChanged(
+    PROTECT_FROM_MELEE,
+    PROTECT_FROM_MISSILES
+)
+
+Decision:
+
+desiredStyle = MAGIC
+
+Action queue:
+
+switch MAGIC_GEAR
+activate MAGIC offensive prayer
+select Ice Barrage
+cast on locked opponent
+
+If opponent subsequently switches:
+
+Protect from Missiles
+    ->
+Protect from Magic
+
+DecisionEngine should reconsider the next attack and potentially queue:
+
+RANGED_GEAR
+RANGED_OFFENSIVE_PRAYER
+ATTACK
+
+Do not create an infinite reaction loop inside one tick.
+
+Limit strategic reevaluation to controlled tick/state events.
+
+==================================================
+17. PRAYER EDGE DETECTION
+==================================================
+
+Do not trigger repeatedly merely because the opponent continues using the same prayer.
+
+Use transitions.
+
+Example:
+
+previousPrayer != PROTECT_FROM_MISSILES
+currentPrayer == PROTECT_FROM_MISSILES
+
+=> new event
+
+But:
+
+previousPrayer == PROTECT_FROM_MISSILES
+currentPrayer == PROTECT_FROM_MISSILES
+
+=> no new event
+
+==================================================
+18. DECISION ENGINE
+==================================================
+
+Each relevant tick/event should construct:
+
+CombatState {
+    currentTick
+    localPlayer
+    opponent
+    currentEquipment
+    inventory
+    activePrayers
+    opponentPrayer
+    localFreezeState
+    opponentFreezeState
+    attackCooldown
+    specEnergy
+    distance
+    availableSpells
+}
+
+Then:
+
+decision = DecisionEngine.evaluate(CombatState)
+
+Return something like:
+
+CombatDecision {
+    desiredStyle
+    desiredGear
+    desiredOffensivePrayer
+    desiredDefensivePrayer
+    desiredSpell
+    useSpecialAttack
+    target
+    confidence
+}
+
+==================================================
+19. STATE MACHINE
+==================================================
+
+Use states similar to:
+
+IDLE
+ACQUIRE_TARGET
+ANALYZE
+PREPARE_ATTACK
+SWITCH_GEAR
+SWITCH_PRAYER
+SELECT_SPELL
+ENABLE_SPEC
+EXECUTE_ATTACK
+VERIFY
+COOLDOWN
+RECOVER
+FAILED
+
+Typical loop:
+
+ACQUIRE TARGET
+      |
+      v
+ANALYZE OPPONENT
+      |
+      v
+CHOOSE STYLE
+      |
+      v
+PREPARE ATTACK
+      |
+      +--> gear
+      +--> offensive prayer
+      +--> defensive prayer
+      +--> spell/spec
+      |
+      v
+ATTACK
+      |
+      v
+VERIFY
+      |
+      v
+COOLDOWN
+      |
+      v
+ANALYZE AGAIN
+
+==================================================
+20. TIMING TELEMETRY
+==================================================
+
+Record every important action.
+
+Example:
+
+Tick: 10452
+Opponent prayer: Protect from Missiles
+Decision: MAGIC_BARRAGE
+
+Prayer detected:       +0 ms
+Decision complete:     +4 ms
+Magic switch start:    +7 ms
+Magic switch complete: +71 ms
+Barrage selected:      +103 ms
+Target clicked:        +137 ms
+
+Total reaction:
+137 ms
+
+Tick budget:
+600 ms
+
+Record:
+
+decision latency
+gear switch latency
+prayer switch latency
+spell selection latency
+targeting latency
+total sequence latency
+tick deadline success/failure
+
+==================================================
+21. DEBUG OVERLAY
+==================================================
+
+Create an optional overlay showing:
+
+TARGET
+Name
+HP
+Distance
+Protection prayer
+Predicted attack style
+Freeze status
+
+LOCAL
+HP
+Prayer
+Current combat style
+Attack cooldown
+Spec energy
+Freeze status
+
+AI/DECISION
+Desired style
+Next attack
+Current state
+Current tick
+Time remaining in tick
+Decision confidence
+
+GEAR
+Current preset
+Required switches
+Missing items
+
+TIMING
+Last reaction time
+Last switch time
+Last attack time
+Same-tick success
+
+==================================================
+22. CONFIGURATION UI
+==================================================
+
+Create a configuration panel for:
+
+Magic gear preset
+Ranged gear preset
+Melee gear preset
+Special attack gear preset
+
+Magic offensive prayer
+Ranged offensive prayer
+Melee offensive prayer
+
+Defensive prayer automation ON/OFF
+
+Auto Barrage ON/OFF
+Auto Range ON/OFF
+Auto Melee ON/OFF
+Auto Spec ON/OFF
+
+Freeze management ON/OFF
+
+Re-freeze threshold
+
+Spec HP threshold
+
+Style preferences
+
+Debug overlay ON/OFF
+
+Tick telemetry ON/OFF
+
+Allow gear presets to be captured from the player's currently equipped items.
+
+Example button:
+
+"Save Current Equipment as Magic Setup"
+
+==================================================
+23. SAFETY / CONSISTENCY RULES
+==================================================
+
+Never:
+
+attack an unintended target
+switch to equipment that isn't configured
+spam the same prayer
+spam Ice Barrage selection
+spam attack interactions
+continue a sequence against a dead/invalid target
+continue using stale target information
+execute a queued attack whose preconditions are no longer valid
+
+Every queued action should verify its preconditions immediately before execution.
+
+==================================================
+24. ARCHITECTURE REQUIREMENT
+==================================================
+
+Do not couple Orion-specific APIs throughout the combat logic.
+
+Create an adapter:
+
+OrionClientAdapter
+
+with methods similar to:
+
+getGameTick()
+getLocalPlayer()
+getCurrentOpponent()
+getEquipment()
+getInventory()
+getActorPrayer(actor)
+getActorEquipment(actor)
+getActorAnimation(actor)
+equipItem(itemId)
+activatePrayer(prayer)
+selectSpell(spell)
+castSpellOn(spell, actor)
+attack(actor)
+getSpecialAttackEnergy()
+enableSpecialAttack()
+isFrozen(actor)
+
+The combat engine should depend on the adapter interface.
+
+This makes it possible to replace individual Orion API calls without rewriting
+the entire NH engine.
+
+==================================================
+25. IMPLEMENTATION ORDER
+==================================================
+
+Implement and test incrementally:
+
+PHASE 1:
+TickManager + telemetry.
+
+PHASE 2:
+TargetManager and stable target locking.
+
+PHASE 3:
+Opponent protection-prayer detection.
+
+PHASE 4:
+Gear preset configuration and GearManager.
+
+PHASE 5:
+Magic switch + Ice Barrage.
+
+PHASE 6:
+Ranged switching/attacking.
+
+PHASE 7:
+Melee switching/attacking.
+
+PHASE 8:
+Defensive prayer prediction.
+
+PHASE 9:
+Freeze tracking.
+
+PHASE 10:
+Special attack logic.
+
+PHASE 11:
+Full DecisionEngine.
+
+PHASE 12:
+Configuration UI and debug overlay.
+
+Do not proceed by inventing Orion API methods.
+
+First inspect the Orion client/server/plugin API and existing project source.
+
+For every required capability, identify the real available API/event/hook.
+
+If a required API does not exist, create an abstraction/TODO and clearly state
+what hook is missing instead of silently inventing functionality.
+
+==================================================
+FINAL TARGET BEHAVIOR
+==================================================
+
+The finished tool should behave as a tick-aware NH PvP controller.
+
+Example:
+
+Enemy equips ranged setup
+    -> protect from ranged
+
+Enemy switches protection to missiles
+    -> magic gear
+    -> magic offensive prayer
+    -> Ice Barrage
+    -> same opponent
+
+Enemy switches protection to magic
+    -> choose ranged/melee
+    -> appropriate gear
+    -> appropriate offensive prayer
+    -> attack
+
+Enemy prepares magic attack
+    -> protect from magic
+
+Enemy prepares ranged attack
+    -> protect from missiles
+
+Enemy prepares melee attack
+    -> protect from melee
+
+Opponent becomes unfrozen / freeze nearly expires
+    -> increase Barrage/re-freeze priority
+
+Opponent reaches configured KO HP
+    -> evaluate special-attack opportunity
+
+All actions must be based on current combat state, synchronized with game ticks,
+and use the minimum necessary gear/prayer/interface interactions.
+
+Prioritize deterministic state handling, target integrity, tick synchronization,
+and detailed telemetry over random sleeps or blind coordinate clicking.
+
+Start by examining the existing Orion project and tell me:
+1. What APIs/hooks already exist.
+2. Which modules/files should be created.
+3. Which existing files need modification.
+4. How game ticks, actors, equipment, prayers, inventory interactions and spell
+   casting are exposed by Orion.
+
+Then implement the system phase-by-phase, compiling/testing after each phase
+instead of attempting the entire system in one unverified code dump.

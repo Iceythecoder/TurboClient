@@ -1,0 +1,4 @@
+<configuration>
+  <!-- Combat telemetry is displayed in memory. Suppress inherited client file logging in this process. -->
+  <root level="OFF"/>
+</configuration>

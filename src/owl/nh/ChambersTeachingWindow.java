@@ -1,0 +1,42 @@
+package owl.nh;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import net.runelite.api.GameState;
+
+/** Compact dashboard; advanced tools and learning have separate windows. */
+final class ChambersTeachingWindow extends JDialog {
+ private final CombatRuntime runtime;private final JFrame owner;
+ private final JLabel state=new JLabel("Ready to run and learn.");
+ private final JDialog stopControl;private ChambersLearningWindow learning,advanced;private final Timer refresh;
+ ChambersTeachingWindow(JFrame owner,CombatRuntime runtime){
+  super((Frame)null,"AI Olm Fighter",false);this.owner=owner;this.runtime=runtime;setDefaultCloseOperation(DISPOSE_ON_CLOSE);PrototypePanel.registerWindow(owner,this);
+  JPanel main=new JPanel(new BorderLayout(12,12));main.setBorder(BorderFactory.createEmptyBorder(16,16,16,16));
+  JPanel actions=new JPanel(new GridLayout(1,1,12,0));JButton learn=new JButton("Learn"),run=new JButton("Run bot");learn.setPreferredSize(new Dimension(150,62));actions.add(run);main.add(actions,BorderLayout.NORTH);
+  JTextArea explanation=new JTextArea("Run bot learns automatically and resumes saved learning.\nAttempts save locally during play and after Stop, death, a stall, or a confirmed head kill. Nothing is uploaded.");explanation.setEditable(false);explanation.setLineWrap(true);explanation.setWrapStyleWord(true);explanation.setOpaque(false);explanation.setRows(4);main.add(explanation,BorderLayout.CENTER);
+  JSpinner kills=new JSpinner(new SpinnerNumberModel(1,1,1000,1));JCheckBox reconnect=new JCheckBox("Reconnect after 30 seconds",true);JPasswordField reconnectPassword=new JPasswordField(14);JPanel loopOptions=new JPanel(new GridLayout(3,2,6,6));loopOptions.add(new JLabel("Kills to complete"));loopOptions.add(kills);loopOptions.add(reconnect);loopOptions.add(new JLabel("Login: Turbo"));loopOptions.add(new JLabel("Password (this session only)"));loopOptions.add(reconnectPassword);JPanel center=new JPanel(new BorderLayout(6,6));center.add(explanation,BorderLayout.NORTH);center.add(loopOptions,BorderLayout.CENTER);main.add(center,BorderLayout.CENTER);
+  JPanel bottom=new JPanel(new BorderLayout());bottom.add(state,BorderLayout.NORTH);JButton settings=new JButton("Advanced settings");bottom.add(settings,BorderLayout.WEST);main.add(bottom,BorderLayout.SOUTH);setContentPane(main);setSize(440,260);setLocationRelativeTo(owner);
+  stopControl=createStopControl();
+  JLabel savedState=new JLabel("No attempt saved in this session yet.");savedState.setFont(savedState.getFont().deriveFont(11f));bottom.add(savedState,BorderLayout.SOUTH);setSize(550,390);
+  learn.addActionListener(e->{showStopControl();if(learning==null||!learning.isDisplayable())learning=new ChambersLearningWindow(owner,runtime,false);learning.setVisible(true);learning.toFront();});
+  settings.addActionListener(e->{if(advanced==null||!advanced.isDisplayable())advanced=new ChambersLearningWindow(owner,runtime,true);advanced.setVisible(true);advanced.toFront();});
+  run.addActionListener(e->{int requestedKills=(Integer)kills.getValue();boolean autoReconnect=reconnect.isSelected();char[] sessionPassword=reconnectPassword.getPassword();if(autoReconnect&&sessionPassword.length==0){JOptionPane.showMessageDialog(this,"Enter the password for this session, or disable reconnect.","Reconnect password",JOptionPane.INFORMATION_MESSAGE);return;}reconnectPassword.setText("");showStopControl();runtime.thread.invoke(()->{
+   if(runtime.olm.running||runtime.olmLoop.plan.active){java.util.Arrays.fill(sessionPassword,'\0');return;}runtime.stop("Starting Olm fighter");try{runtime.olmLoop.start(requestedKills,autoReconnect,sessionPassword);java.util.Arrays.fill(sessionPassword,'\0');runtime.olm.startMain();SwingUtilities.invokeLater(()->{if(isDisplayable())state.setText("Olm baseline active. Observer running.");});}catch(RuntimeException error){runtime.olmLoop.cancel();java.util.Arrays.fill(sessionPassword,'\0');String result=error.getMessage();SwingUtilities.invokeLater(()->{if(isDisplayable()){state.setText("Run not started.");JOptionPane.showMessageDialog(this,result,"Olm setup required",JOptionPane.INFORMATION_MESSAGE);}});}
+  });});
+  refresh=new Timer(200,e->{String saved=runtime.olm.presetStatus();savedState.setToolTipText(saved);savedState.setText(saved.startsWith("Saved attempt:")?"Saved: "+new java.io.File(saved.substring("Saved attempt: ".length())).getName():saved.startsWith("Saved preset:")?"Saved: "+new java.io.File(saved.substring("Saved preset: ".length())).getName():saved.length()>75?saved.substring(0,75)+"...":saved);if(runtime.demonstration.recording)state.setText("Learning: recording your manual run.");else if(runtime.olm.running){state.setText(runtime.olmLoop.plan.active?runtime.olmLoop.plan.progress():runtime.olm.briefStatus());explanation.setText("Current action: "+runtime.olm.status+"\nMovement: "+runtime.olm.movementStatus());}else if(runtime.chambers.armed)state.setText("Projectile prayer switching active.");else state.setText(runtime.olm.briefStatus());state.setToolTipText(runtime.olm.status);});refresh.start();
+  addComponentListener(new ComponentAdapter(){@Override public void componentShown(ComponentEvent e){showStopControl();}});
+  addWindowListener(new WindowAdapter(){@Override public void windowClosed(WindowEvent e){refresh.stop();reconnectPassword.setText("");}});
+ }
+ private JDialog createStopControl(){
+  JDialog floating=new JDialog((Frame)null,"Chambers stop",false);floating.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);floating.setAlwaysOnTop(true);floating.setFocusableWindowState(false);
+  JPanel content=new JPanel(new BorderLayout(4,4));content.setBorder(BorderFactory.createEmptyBorder(5,6,6,6));JLabel handle=new JLabel("Drag to move",SwingConstants.CENTER);handle.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+  MouseAdapter drag=new MouseAdapter(){private Point origin;@Override public void mousePressed(MouseEvent e){origin=e.getPoint();}@Override public void mouseDragged(MouseEvent e){Point screen=e.getLocationOnScreen();floating.setLocation(screen.x-origin.x,screen.y-origin.y-handle.getY()-floating.getInsets().top);}};handle.addMouseListener(drag);handle.addMouseMotionListener(drag);content.add(handle,BorderLayout.NORTH);
+  JButton stop=new JButton("STOP  (F9)");stop.setForeground(new Color(150,20,20));stop.setFont(stop.getFont().deriveFont(Font.BOLD,15f));stop.addActionListener(e->stopAll());content.add(stop,BorderLayout.CENTER);floating.setContentPane(content);floating.setSize(180,105);floating.setResizable(false);
+  Rectangle bounds=owner.getGraphicsConfiguration().getBounds();Insets insets=Toolkit.getDefaultToolkit().getScreenInsets(owner.getGraphicsConfiguration());floating.setLocation(bounds.x+bounds.width-insets.right-floating.getWidth()-16,bounds.y+bounds.height-insets.bottom-floating.getHeight()-16);
+  floating.addWindowListener(new WindowAdapter(){@Override public void windowClosing(WindowEvent e){floating.setVisible(false);}});PrototypePanel.registerWindow(owner,floating);return floating;
+ }
+ JDialog stopControl(){return stopControl;}
+ private void showStopControl(){if(isDisplayable()&&!stopControl.isVisible())stopControl.setVisible(true);}
+ private void stopAll(){runtime.armed=false;runtime.chambers.armed=false;runtime.olm.running=false;runtime.thread.invoke(()->runtime.stop("Chambers floating stop"));state.setText(runtime.olm.briefStatus());}
+}
+

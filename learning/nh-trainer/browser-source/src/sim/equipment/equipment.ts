@@ -1,0 +1,145 @@
+import type { VisibleEquipment } from "../clientView";
+import {
+  NH_PVP_MAGIC_ACCURACY_MODIFIER,
+  NH_PVP_MELEE_ACCURACY_MODIFIER,
+  aggregateBonuses,
+  estimateStyleEv,
+  type BonusTable,
+  type CombatLevels,
+  type CombatStyle,
+  type StyleEvInput,
+  type StyleEvEstimate
+} from "../combat/formulas";
+import {
+  activeProtectionPrayer,
+  aggregatePrayerBoosts,
+  protectPrayerForStyle,
+  pvpProtectionDamageMultiplier,
+  type PrayerId
+} from "../prayer/prayers";
+
+export interface EquipmentBonusRow {
+  readonly id: number;
+  readonly name: string;
+  readonly equipSlot: number;
+  readonly weaponType: string | null;
+  readonly twoHanded: boolean;
+  readonly bonuses: BonusTable;
+}
+
+export interface VisibleStyleEvInput {
+  readonly equipmentRows: readonly EquipmentBonusRow[];
+  readonly attackerEquipment: VisibleEquipment;
+  readonly defenderEquipment: VisibleEquipment;
+  readonly attackerLevels: CombatLevels;
+  readonly defenderLevels: CombatLevels;
+  readonly attackerPrayers?: readonly PrayerId[];
+  readonly defenderPrayers?: readonly PrayerId[];
+  readonly styles?: readonly CombatStyle[];
+  readonly maxMagicDamage?: number;
+  readonly attackType?: StyleEvInput["attackType"];
+  readonly defenderAttackType?: StyleEvInput["attackType"];
+}
+
+const nhMagicInterferenceSlots = ["body", "legs"] as const;
+
+export function equipmentRowsByItemId(rows: readonly EquipmentBonusRow[]): ReadonlyMap<number, EquipmentBonusRow> {
+  return new Map(rows.map((row) => [row.id, row]));
+}
+
+export function aggregateVisibleEquipmentBonuses(
+  equipment: VisibleEquipment,
+  equipmentRows: readonly EquipmentBonusRow[]
+): BonusTable {
+  const rowsById = equipmentRowsByItemId(equipmentRows);
+  const equippedRows = Object.values(equipment)
+    .map((item) => (item ? rowsById.get(item.itemId) : undefined))
+    .filter((row): row is EquipmentBonusRow => row !== undefined);
+  const bonuses = aggregateBonuses(equippedRows);
+  // Source: Equipment.updateBonuses() ignores ammo-slot ranged strength for
+  // self-supplying bows. Webweaver's own +65 strength already includes its arrow.
+  if (rowsById.get(equipment.weapon?.itemId ?? -1)?.weaponType === "WEBWEAVER_BOW") {
+    const ammoStrength = rowsById.get(equipment.ammo?.itemId ?? -1)?.bonuses.ranged_strength_bonus ?? 0;
+    return { ...bonuses, ranged_strength_bonus: bonuses.ranged_strength_bonus - ammoStrength };
+  }
+  return bonuses;
+}
+
+export function estimateVisibleStyleEvs(input: VisibleStyleEvInput): readonly StyleEvEstimate[] {
+  const attackerBonuses = aggregateVisibleEquipmentBonuses(input.attackerEquipment, input.equipmentRows);
+  const defenderBonuses = aggregateVisibleEquipmentBonuses(input.defenderEquipment, input.equipmentRows);
+  const attackerPrayer = aggregatePrayerBoosts(input.attackerPrayers ?? []);
+  const defenderPrayer = aggregatePrayerBoosts(input.defenderPrayers ?? []);
+  const defenderProtectionPrayer = activeProtectionPrayer(input.defenderPrayers ?? []);
+  const styles = input.styles ?? (["magic", "ranged", "slash"] as const);
+  const magicInterference = nhVisibleMagicInterference(input.attackerEquipment, input.equipmentRows);
+
+  return styles.map((style) => {
+    const attackBoostMultiplier =
+      style === "magic"
+        ? (1 + attackerPrayer.magic) * Math.max(0, 1 - magicInterference)
+        : style === "ranged"
+          ? 1 + attackerPrayer.rangedAttack
+          : 1 + attackerPrayer.attack;
+    const strengthBoostMultiplier =
+      style === "ranged" ? 1 + attackerPrayer.rangedStrength : style === "magic" ? 1 : 1 + attackerPrayer.strength;
+
+    const estimate = estimateStyleEv({
+      style,
+      attackerLevels: input.attackerLevels,
+      defenderLevels: input.defenderLevels,
+      attackerBonuses,
+      defenderBonuses,
+      attackBoostMultiplier,
+      strengthBoostMultiplier,
+      accuracyModifier: nhVisiblePvpAccuracyModifier(style),
+      defenceBoostMultiplier: 1 + defenderPrayer.defence,
+      magicDefenceBoostMultiplier: 1 + defenderPrayer.magic,
+      maxMagicDamage: input.maxMagicDamage,
+      attackType: input.attackType,
+      defenderAttackType: input.defenderAttackType
+    });
+
+    if (defenderProtectionPrayer !== protectPrayerForStyle(style)) {
+      return estimate;
+    }
+
+    // Source: PlayerCombat.postDefend() applies PvP protection before XP and Hit.finish().
+    // Visible EV ranking needs the prayer-final damage expectation, while runtime rolls keep raw maxDamage.
+    const protectedMaxDamage = Math.trunc(estimate.maxDamage * pvpProtectionDamageMultiplier);
+    return {
+      ...estimate,
+      expectedDamage: estimate.hitChance * (protectedMaxDamage / 2)
+    };
+  });
+}
+
+export function strongestVisibleStyle(input: VisibleStyleEvInput): StyleEvEstimate | undefined {
+  return [...estimateVisibleStyleEvs(input)].sort((left, right) => right.expectedDamage - left.expectedDamage)[0];
+}
+
+export function nhVisibleMagicInterference(
+  equipment: VisibleEquipment,
+  equipmentRows: readonly EquipmentBonusRow[]
+): number {
+  const rowsById = equipmentRowsByItemId(equipmentRows);
+  let interferenceCount = 0;
+  for (const slot of nhMagicInterferenceSlots) {
+    const item = equipment[slot];
+    const row = item ? rowsById.get(item.itemId) : undefined;
+    if ((row?.bonuses.magic_attack_bonus ?? 0) < 0) {
+      interferenceCount += 1;
+    }
+  }
+  return interferenceCount * 0.45;
+}
+
+function nhVisiblePvpAccuracyModifier(style: CombatStyle): number {
+  if (style === "magic") {
+    return NH_PVP_MAGIC_ACCURACY_MODIFIER;
+  }
+  if (style === "stab" || style === "slash" || style === "crush") {
+    return NH_PVP_MELEE_ACCURACY_MODIFIER;
+  }
+  return 1;
+}

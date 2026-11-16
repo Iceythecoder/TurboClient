@@ -1,0 +1,54 @@
+{
+  "status": "proposal_only_not_loaded",
+  "version": "nh-starting-rules-draft-1",
+  "stage": 2,
+  "requires_user_approval": true,
+  "hard_constraints": {
+    "items": "actual owned NH starter items only",
+    "target": "same valid target identity/generation and current tick",
+    "attacks": "recheck cooldown, range, spell level, target health and execution confirmation",
+    "supplies": "available stock and native food/potion locks",
+    "prayers": "required level and positive points; allow explicit OFF",
+    "special": "AGS owned, shield stow space, at least 50 energy; enable idempotently",
+    "movement": "freeze/collision gates; one explicit movement budget per tick",
+    "joint_actions": "validate after movement and resource use; factorized masks do not prove full-vector legality"
+  },
+  "learnable_preferences": {
+    "counters": {
+      "protect_from_missiles": "magic/ice barrage",
+      "protect_from_magic": "ranged; melee when reachable and advantageous",
+      "protect_from_melee": "magic or ranged by expected damage and switch cost",
+      "none": "expected damage with range/cooldown/switch cost"
+    },
+    "eating": {
+      "normal_hp": 55,
+      "critical_hp": 35,
+      "threat_margin_hp": 12,
+      "avoid_waste": true,
+      "allow_overheal_only_for_credible_ko_threat": true
+    },
+    "restoration": {
+      "prayer_threshold": 20,
+      "restore_magic_if_below_barrage_level": true,
+      "restore_before_reboost": true
+    },
+    "freeze": {
+      "prefer_if_opponent_free_and_distance_requires_control": true,
+      "refreeze_window_ticks": 3,
+      "respect_immunity": true
+    },
+    "ags": {
+      "minimum_energy": 50,
+      "opponent_hp_at_most": 35,
+      "own_hp_at_least": 60,
+      "require_melee_reach": true,
+      "avoid_protect_melee_unless_estimated_ko": true
+    }
+  },
+  "limitations": {
+    "prayer_model": "OSRS average drain; NH/Orion discrete-tick calibration unverified",
+    "runes": "pinned simulator does not model rune-pouch charge depletion",
+    "incoming_threat": "visible weapon estimates; no future rolled-hit information",
+    "transfer": "simulator only; no automatic Orion activation"
+  }
+}

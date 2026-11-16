@@ -1,0 +1,264 @@
+{
+  "schema": "nh-browser-starter-sb3-v1",
+  "environment": "nh-trainer-browser-starter-v1",
+  "input_size": 114,
+  "action_dimensions": [
+    8,
+    5,
+    26,
+    6,
+    2
+  ],
+  "starter_signature": "1cb9135ed477154d3b0be67096cc35d80caa3b28618e23a54fc1630da8feb39b",
+  "action_labels": {
+    "combat": [
+      "WAIT",
+      "MAGIC_ATTACK",
+      "RANGED_ATTACK",
+      "MELEE_ATTACK",
+      "AGS_SPECIAL",
+      "MAGIC_EQUIP",
+      "RANGED_EQUIP",
+      "MELEE_EQUIP"
+    ],
+    "prayer": [
+      "protect_from_magic",
+      "protect_from_missiles",
+      "protect_from_melee",
+      "smite",
+      "redemption"
+    ],
+    "movement": [
+      "none",
+      "stand_under",
+      "move_w2_s2",
+      "move_w1_s2",
+      "move_s2",
+      "move_e1_s2",
+      "move_e2_s2",
+      "move_w2_s1",
+      "move_w1_s1",
+      "move_s1",
+      "move_e1_s1",
+      "move_e2_s1",
+      "move_w2",
+      "move_w1",
+      "move_e1",
+      "move_e2",
+      "move_w2_n1",
+      "move_w1_n1",
+      "move_n1",
+      "move_e1_n1",
+      "move_e2_n1",
+      "move_w2_n2",
+      "move_w1_n2",
+      "move_n2",
+      "move_e1_n2",
+      "move_e2_n2"
+    ],
+    "supply": [
+      "none",
+      "safe_eat",
+      "double_eat",
+      "brew_only",
+      "restore_reboost",
+      "panic_full"
+    ],
+    "equipment": [
+      "style_loadout",
+      "weapon_only"
+    ]
+  },
+  "allowed_gear": [
+    4091,
+    4093,
+    4736,
+    4759,
+    6585,
+    7462,
+    10828,
+    11770,
+    11791,
+    11802,
+    11840,
+    12006,
+    12831,
+    21791,
+    21902,
+    21932,
+    22322
+  ],
+  "starter_equipment": [
+    [
+      0,
+      10828
+    ],
+    [
+      1,
+      21791
+    ],
+    [
+      2,
+      6585
+    ],
+    [
+      3,
+      11791
+    ],
+    [
+      4,
+      4091
+    ],
+    [
+      5,
+      12831
+    ],
+    [
+      7,
+      4093
+    ],
+    [
+      9,
+      7462
+    ],
+    [
+      10,
+      11840
+    ],
+    [
+      12,
+      11770
+    ],
+    [
+      13,
+      21932
+    ]
+  ],
+  "starter_inventory": [
+    {
+      "itemId": 12695,
+      "quantity": 1
+    },
+    {
+      "itemId": 22461,
+      "quantity": 1
+    },
+    {
+      "itemId": 6685,
+      "quantity": 1
+    },
+    {
+      "itemId": 6685,
+      "quantity": 1
+    },
+    {
+      "itemId": 13441,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 10925,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 6685,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 10925,
+      "quantity": 1
+    },
+    {
+      "itemId": 4736,
+      "quantity": 1
+    },
+    {
+      "itemId": 21902,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 4759,
+      "quantity": 1
+    },
+    {
+      "itemId": 22322,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 11802,
+      "quantity": 1
+    },
+    {
+      "itemId": 12006,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 391,
+      "quantity": 1
+    },
+    {
+      "itemId": 12791,
+      "quantity": 1
+    }
+  ],
+  "training_profile": "nh-starter",
+  "algorithm": "RecurrentPPO",
+  "source_commit": "e94c3ec3f6a7527fb0b12ded9c6e04c2a6810c21",
+  "source_url": "https://nh-train.com/",
+  "opponent": "fixed-ranged",
+  "training_steps": 128,
+  "max_fight_ticks": 32,
+  "seed": 42,
+  "device": "cpu",
+  "reward": "terminal_win_loss_only",
+  "live_control": false,
+  "validated_orion": false,
+  "description": "NH Trainer nh-starter checkpoint; requires a separate validated Orion adapter."
+}

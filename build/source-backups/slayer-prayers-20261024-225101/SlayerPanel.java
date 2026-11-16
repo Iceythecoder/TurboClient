@@ -1,0 +1,11 @@
+package owl.nh;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+final class SlayerPanel extends JFrame {
+ private final Timer timer;
+ SlayerPanel(CombatRuntime runtime,SlayerController fighter){super("Turbo Slayer");TurboBranding.apply(this);setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);JPanel root=new JPanel(new BorderLayout(10,10));root.setBorder(BorderFactory.createEmptyBorder(16,16,16,16));JLabel selected=new JLabel("Selected: "+fighter.selected),progress=new JLabel("Ready");JTextArea status=new JTextArea(5,42);status.setEditable(false);status.setLineWrap(true);status.setWrapStyleWord(true);JPanel actions=new JPanel(new GridLayout(2,2,8,8));JButton pick=new JButton("Select NPC in game"),last=new JButton("Use last killed"),start=new JButton("Start"),stop=new JButton("Stop / F9");JSpinner kills=new JSpinner(new SpinnerNumberModel(1,1,10000,1));actions.add(pick);actions.add(last);actions.add(start);actions.add(stop);JPanel top=new JPanel(new GridLayout(4,1,4,4));top.add(selected);JPanel count=new JPanel();count.add(new JLabel("Number to kill"));count.add(kills);top.add(count);top.add(progress);top.add(new JLabel("Uses your current gear/spell. Stand near the NPCs before Start."));root.add(top,BorderLayout.NORTH);root.add(actions,BorderLayout.CENTER);root.add(new JScrollPane(status),BorderLayout.SOUTH);setContentPane(root);setSize(580,390);setLocationByPlatform(true);
+  pick.addActionListener(e->runtime.thread.invoke(fighter::pick));last.addActionListener(e->runtime.thread.invoke(()->{try{fighter.lastKilled();}catch(RuntimeException error){fighter.status=error.getMessage();}}));start.addActionListener(e->{int amount=(Integer)kills.getValue();runtime.thread.invoke(()->{try{fighter.start(amount);}catch(RuntimeException error){fighter.status=error.getMessage();}});});stop.addActionListener(e->runtime.thread.invoke(()->runtime.stop("Slayer Stop")));timer=new Timer(150,e->{selected.setText("Selected: "+fighter.selected);progress.setText(fighter.progress()+" | Name privacy: "+runtime.privacy.status);status.setText(fighter.status);});timer.start();addWindowListener(new WindowAdapter(){public void windowClosing(WindowEvent e){runtime.thread.invoke(()->runtime.stop("Slayer window closed"));dispose();}});
+ }
+ @Override public void dispose(){timer.stop();super.dispose();}
+}

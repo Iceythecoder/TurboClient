@@ -1,0 +1,13 @@
+{
+  "manifest.json": "728384c0744980a873d0f489ef7a149510934bb1308e67b040d24c4291685cca",
+  "episodes.jsonl": "371bf051ded4088ac6de9eac9d8458c33836d6b0c9043015ceac54a46a6cd3f9",
+  "summary.json": "f2820d04d4f5fab3b4f070114800b77d7d44d98374a78b3946f806872c0f67f1",
+  "snapshot\\nh_starter_env.py": "fcbcc349350746fd4900bd52d623aa3434fad471f3aab9030ecce4163e453f97",
+  "snapshot\\scripted_fighter.py": "e613e58e683192b67bf77ebd182658992f6a7dc25159311253549489b5ea9ef8",
+  "snapshot\\starting_rules.py": "e9d0f14b6f2618d588457ba52bd5cc207b7c9fd8774096608d1d8b6b328ce74b",
+  "snapshot\\audit\\stage3.py": "a7a47b3a88304d57cc3555c78dc9bca18ce63cd14feb990a303dba06aa5eecff",
+  "snapshot\\audit\\test_stage3.py": "5d53a1e3523cbda226d67d25e6242ff26bdb8b7174b8a0750f4115270083bf3e",
+  "snapshot\\rules\\nh-starter-1.0.0.json": "e5e9263e30ca949c2915a34b5a8d8ab72ea62dff25a082a27f567083213b8a22",
+  "snapshot\\browser-source\\nh-starter\\worker-stage3.mjs": "cc9beb4763201d90c5157db3539390c12fe21cb4e59d52f9b10759d09edb28e0",
+  "snapshot\\browser-source\\nh-starter\\worker-stage3.ts": "b392562b7cb3b67aad12fbb5e122a2ad73eb8883cfce9923f100ee57e40162c4"
+}

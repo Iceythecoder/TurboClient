@@ -1,0 +1,116 @@
+{
+  "episodes": 8,
+  "steps": 422,
+  "confirmed_attacks": 71,
+  "requested_rejections": {
+    "attack_cooldown": 253,
+    "out_of_range": 22
+  },
+  "wasted_supplies": 0,
+  "results": [
+    {
+      "seed": 9100,
+      "diagnostic_policy": "hold",
+      "return": -1.0,
+      "winner": 1,
+      "ticks": 17,
+      "agent_attacks": 0,
+      "hp": [
+        0,
+        99
+      ]
+    },
+    {
+      "seed": 9101,
+      "diagnostic_policy": "magic",
+      "return": 0.0,
+      "winner": -1,
+      "ticks": 64,
+      "agent_attacks": 13,
+      "hp": [
+        12,
+        48
+      ]
+    },
+    {
+      "seed": 9102,
+      "diagnostic_policy": "ranged",
+      "return": 0.0,
+      "winner": -1,
+      "ticks": 64,
+      "agent_attacks": 13,
+      "hp": [
+        49,
+        57
+      ]
+    },
+    {
+      "seed": 9103,
+      "diagnostic_policy": "melee",
+      "return": 0.0,
+      "winner": -1,
+      "ticks": 64,
+      "agent_attacks": 14,
+      "hp": [
+        52,
+        37
+      ]
+    },
+    {
+      "seed": 9104,
+      "diagnostic_policy": "hold",
+      "return": -1.0,
+      "winner": 1,
+      "ticks": 59,
+      "agent_attacks": 0,
+      "hp": [
+        0,
+        99
+      ]
+    },
+    {
+      "seed": 9105,
+      "diagnostic_policy": "magic",
+      "return": -1.0,
+      "winner": 1,
+      "ticks": 51,
+      "agent_attacks": 11,
+      "hp": [
+        0,
+        58
+      ]
+    },
+    {
+      "seed": 9106,
+      "diagnostic_policy": "ranged",
+      "return": 0.0,
+      "winner": -1,
+      "ticks": 64,
+      "agent_attacks": 13,
+      "hp": [
+        13,
+        50
+      ]
+    },
+    {
+      "seed": 9107,
+      "diagnostic_policy": "melee",
+      "return": -1.0,
+      "winner": 1,
+      "ticks": 39,
+      "agent_attacks": 7,
+      "hp": [
+        0,
+        83
+      ]
+    }
+  ],
+  "replay": {
+    "passed": true,
+    "episodes": 8,
+    "steps": 422,
+    "exact_observations": true,
+    "exact_events": true,
+    "exact_rewards": true
+  }
+}

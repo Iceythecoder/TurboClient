@@ -1,0 +1,45 @@
+TURBO CLIENT - OFFLINE UPDATER
+
+1. Install and launch the official Orion client at least once.
+2. Extract this entire updater ZIP. Do not run it from inside the archive.
+3. Run Update Turbo Client.cmd.
+4. Choose the existing folder containing Turbo Client.exe. It may be under
+   Downloads, Apps, or .orion. Do not choose the updater folder itself.
+5. Close any open Orion client once, then open the updated Turbo Client.exe.
+
+The updater finds your installed Orion client and Java runtime, checks the
+required API signatures, then copies your local client JAR into a versioned
+release folder. A different file hash is no longer an automatic rejection.
+This checks API compatibility; it cannot guarantee identical live gameplay.
+No game login or input occurs during this preflight. Missing requirements
+are reported before installed files change. Setup.cmd also uses this check.
+
+Your profiles, recorded attempts, gear choices, learned checkpoints and usage
+privacy preferences are preserved. Replaced files are backed up under
+update-backups. Failed replacement operations attempt to roll back those files.
+Payload SHA-256 hashes detect accidental changes; they are not a publisher
+signature or proof that an archive from an unknown sender is trustworthy.
+
+ONE-TIME STARTER
+The payload includes learned behaviour and calibration from the owner's latest
+looted run, filtered to remove raw attempt history and identity data. It includes
+gear IDs and instance mappings as a starting template. New users still need to
+configure their own equipment. It is not proof of perfect combat performance.
+The shared starter is copied once. On the next Run bot, learning is seeded once
+only if you do not already have a reward-trained model or target corrections.
+Existing learning takes precedence. Personal gear and mappings are preserved
+when applying starter learning; later runs learn independently. Subsequent
+updaters never replace your starter or reset the one-time marker.
+
+EXPORT TO SEND BACK
+In Turbo Client, choose Learning data > Export learned behaviour.
+Choose a local .json filename and send that file manually to the owner.
+The export contains learned model weights, timings, movement preferences,
+gear IDs and instance mappings. It excludes raw recordings, chat, usernames,
+credentials, connection records and usage-reporting preferences. Exporting
+does not upload anything, and returned models are not merged automatically.
+
+Only update when no run is active. The updater does not kill your client or
+bypass antivirus. If files are quarantined, review the detection instead of
+disabling protection. The optional reporting address may expire independently;
+usage reporting remains opt-in and never blocks gameplay.

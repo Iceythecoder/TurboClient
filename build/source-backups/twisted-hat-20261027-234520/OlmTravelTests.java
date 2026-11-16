@@ -1,0 +1,22 @@
+package owl.nh;
+import java.util.*;
+
+public final class OlmTravelTests {
+ static OlmSpecials.Cell c(int x,int y){return new OlmSpecials.Cell(x,y,0);}
+ static void check(boolean value,String message){CoreTests.check(value,"Olm travel: "+message);}
+ public static void main(String[] args){
+  List<Integer> gear=new ArrayList<>(Arrays.asList(21018,21024));Map<Integer,Integer> upgraded=OlmGearSwitch.recogniseUpgrades(gear,Collections.singleton(24668),Collections.emptySet(),Collections.emptySet());check(gear.equals(Arrays.asList(21018,24668))&&upgraded.get(21024)==24668,"already equipped Twisted bottoms replace missing original requirement");
+  gear=new ArrayList<>(Arrays.asList(21024));OlmGearSwitch.recogniseUpgrades(gear,Collections.emptySet(),Collections.singleton(24668),Collections.emptySet());check(gear.equals(Collections.singletonList(24668))&&OlmGearSwitch.next(gear,Collections.emptySet(),Collections.emptySet())==24668,"inventory upgrade becomes the actual equip request");
+  gear=new ArrayList<>(Arrays.asList(21024));check(OlmGearSwitch.recogniseUpgrades(gear,Collections.emptySet(),new HashSet<>(Arrays.asList(21024,24668)),Collections.emptySet()).isEmpty()&&gear.contains(21024),"explicit original is retained when it is available");check(OlmGearSwitch.recogniseUpgrades(gear,Collections.emptySet(),Collections.singleton(123),Collections.emptySet()).isEmpty(),"unrelated item cannot satisfy missing bottoms");
+  List<OlmSpecials.Cell> path=OlmTravel.path(c(0,0),p->p.equals(c(12,0)),(a,b)->Math.abs(b.y)<=2&&b.x>=0&&b.x<=12);
+  check(path.size()==13&&path.get(path.size()-1).equals(c(12,0)),"ordinary cross-room movement plans one distant destination");
+  OlmTravel t=new OlmTravel();t.goal("melee");t.sent(c(0,0),c(12,0),1);for(int x=1;x<12;x++)check(t.walking(c(x,0),x+1),"progress suppresses further movement clicks");check(!t.walking(c(12,0),13),"arrival releases attack handoff");
+  t.sent(c(0,0),c(12,0),20);check(t.walking(c(0,0),23)&&!t.walking(c(0,0),24),"ignored destination click gets a bounded retry");for(int i=0;i<4;i++){check(t.mayZoom(i*8),"zoom burst available");t.zoomed(i*8);check(t.waitingForZoom(i*8+1),"wait for observed camera response");}check(t.zoomExhausted()&&!t.mayZoom(100),"camera zoom is bounded instead of looping forever");
+  t.goal("magic");check(!t.zoomExhausted()&&!t.walking(c(0,0),100),"changed hand cancels old destination");
+  path=OlmTravel.path(c(0,0),p->p.equals(c(5,0)),(a,b)->b.x>=0&&b.x<=5&&Math.abs(b.y)<=2&&!(b.x==2&&b.y==0));check(!path.isEmpty()&&!path.contains(c(2,0)),"native collision constraints exclude blocked route cells");
+  OlmPhaseTracker phase=new OlmPhaseTracker();for(int pair=0;pair<3;pair++)for(boolean mage:new boolean[]{true,false}){int tick=pair*20+(mage?1:6),index=pair*2+(mage?1:2);phase.observe(mage,index,1,1,true,false);phase.health(mage,index,1,1,80,tick,true);phase.health(mage,index,1,1,5,tick+1,true);phase.finishFrame(tick+2);phase.finishFrame(tick+3);}
+  check(phase.magicKills()==3&&phase.meleeKills()==3&&phase.phase(false)==OlmStrategy.Phase.HEAD,"missed zero-health frame can recover each low-health targeted hand once and reach head phase");check(phase.recoveredMagic()==3&&phase.recoveredMelee()==3,"inferred clears are distinguishable from explicit deaths");OlmStrategy strategy=new OlmStrategy();for(int i=0;i<7;i++)strategy.drinkConfirmed();OlmStrategy.View head=OlmStrategyTests.ready();head.entered=true;head.headAlive=true;head.phase=phase.phase(false);check(strategy.choose(head).value.equals("head"),"recovered final pair releases the head attack instead of waiting for more hands");
+  phase.reset();phase.observe(true,1,1,1,true,false);phase.health(true,1,1,1,80,1,true);phase.finishFrame(2);check(phase.magicKills()==0,"absence at high health is not counted as a kill");phase.health(true,1,1,1,5,3,false);phase.finishFrame(12);check(phase.magicKills()==0,"stale low health cannot invent a phase transition");
+  System.out.println("Olm travel checks passed: one destination per clear route, progress/ignored-click handling, bounded zoom and conservative missed-death recovery. Synthetic states only.");
+ }
+}

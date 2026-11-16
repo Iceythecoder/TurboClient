@@ -1,0 +1,51 @@
+package owl.nh;
+import java.awt.Rectangle;
+import java.util.function.*;
+import net.runelite.api.Client;
+import net.runelite.api.widgets.*;
+import net.unethicalite.api.widgets.*;
+
+/** Serialises tab opening and actions; does not invoke tab-opening client scripts. */
+final class VisibleCombatUi {
+ private final IntSupplier cycle;private final Predicate<Tab> open;private final Consumer<Tab> click;
+ private int used=Integer.MIN_VALUE,lastOpen=Integer.MIN_VALUE,requestedPriority;private Tab requested;
+ volatile String status="Visible interface actions enabled.";
+ VisibleCombatUi(Client client){this(client::getGameCycle,tab->contentOpen(client,tab),tab->{
+  for(WidgetInfo info:WidgetInfo.values())if((info==tab.getWidgetInfo()||info.name().endsWith("_"+tab.name()+"_TAB"))&&layoutMatches(info.name(),client.isResized(),client.getVarbitValue(net.runelite.api.Varbits.SIDE_PANELS)!=0)){
+   Widget widget=client.getWidget(info);if(!effectivelyVisible(widget))continue;Rectangle r=widget.getBounds();
+   if(!validLogicalBounds(client,r))continue;
+   // Canvas coordinates include stretching; only an actual layout button may receive a primary click.
+   dispatchClick(client,canvasPoint(client,new java.awt.Point((int)r.getCenterX(),(int)r.getCenterY())));return;
+  }
+  throw new IllegalStateException("Visible "+tab+" tab button unavailable");
+ });}
+ VisibleCombatUi(IntSupplier cycle,Predicate<Tab> open,Consumer<Tab> click){this.cycle=cycle;this.open=open;this.click=click;}
+ static boolean inventoryVisible(Client client,net.runelite.api.Item item){return contentOpen(client,Tab.INVENTORY)&&effectivelyVisible(client.getWidget(item.getWidgetId()));}
+ static boolean layoutMatches(String name,boolean resized,boolean bottomLine){if(!resized)return name.startsWith("FIXED_VIEWPORT_");return bottomLine?name.startsWith("RESIZABLE_VIEWPORT_BOTTOM_LINE_"):name.startsWith("RESIZABLE_VIEWPORT_")&&!name.startsWith("RESIZABLE_VIEWPORT_BOTTOM_LINE_");}
+ static boolean effectivelyVisible(Widget widget){java.util.Set<Widget> seen=java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());for(Widget w=widget;w!=null;w=w.getParent()){if(!seen.add(w)||seen.size()>64||!w.isVisible()||w.isHidden()||w.isSelfHidden())return false;}return widget!=null;}
+ static java.awt.Point scalePoint(java.awt.Point p,boolean stretched,java.awt.Dimension real,java.awt.Dimension displayed){if(!stretched)return new java.awt.Point(p);if(real==null||displayed==null||real.width<=0||real.height<=0||displayed.width<=0||displayed.height<=0)throw new IllegalStateException("Stretched interface dimensions unavailable");return new java.awt.Point((int)Math.ceil(p.x*(double)displayed.width/real.width),(int)Math.ceil(p.y*(double)displayed.height/real.height));}
+ private static java.awt.Point canvasPoint(Client client,java.awt.Point p){java.awt.Point result=scalePoint(p,client.isStretchedEnabled(),client.getRealDimensions(),client.isStretchedEnabled()?client.getStretchedDimensions():null);if(client.getCanvas()==null||!new Rectangle(0,0,client.getCanvas().getWidth(),client.getCanvas().getHeight()).contains(result))throw new IllegalStateException("Interface click outside current canvas");return result;}
+ private static boolean validLogicalBounds(Client client,Rectangle r){if(client.getCanvas()==null||r==null||r.width<=0||r.height<=0)return false;java.awt.Dimension logical=client.isStretchedEnabled()?client.getRealDimensions():client.getCanvas().getSize();return logical!=null&&new Rectangle(0,0,logical.width,logical.height).contains(r);}
+ static java.util.List<java.awt.event.MouseEvent> clickEvents(java.awt.Canvas canvas,java.awt.Point p,long stamp){java.util.List<java.awt.event.MouseEvent> events=new java.util.ArrayList<>();for(int id:new int[]{java.awt.event.MouseEvent.MOUSE_MOVED,java.awt.event.MouseEvent.MOUSE_PRESSED,java.awt.event.MouseEvent.MOUSE_RELEASED,java.awt.event.MouseEvent.MOUSE_CLICKED}){boolean press=id==java.awt.event.MouseEvent.MOUSE_PRESSED,move=id==java.awt.event.MouseEvent.MOUSE_MOVED;events.add(new java.awt.event.MouseEvent(canvas,id,stamp,press?java.awt.event.InputEvent.BUTTON1_DOWN_MASK:0,p.x,p.y,move?0:1,false,move?java.awt.event.MouseEvent.NOBUTTON:java.awt.event.MouseEvent.BUTTON1));}return events;}
+ private static void dispatchClick(Client client,java.awt.Point p){java.awt.Canvas canvas=client.getCanvas();java.awt.EventQueue.invokeLater(()->{if(!canvas.isShowing()||!canvas.isFocusOwner())return;for(java.awt.event.MouseEvent e:clickEvents(canvas,p,System.currentTimeMillis()))canvas.dispatchEvent(e);});}
+ static boolean contentOpen(Client client,Tab tab){
+  // Same selection variable/order as the installed Tabs.isOpen implementation.
+  // Cached content can report visible for an inactive tab, so visibility alone is insufficient.
+  if(client.getVarcIntValue(171)!=tab.ordinal())return false;
+  Widget content=null;if(tab==Tab.INVENTORY)content=client.getWidget(WidgetInfo.INVENTORY);else if(tab==Tab.PRAYER)content=client.getWidget(net.runelite.api.Prayer.PROTECT_FROM_MAGIC.getWidgetInfo());else return true;return effectivelyVisible(content);
+ }
+ boolean claim(){int now=cycle.getAsInt();if(now==used)return false;used=now;return true;}
+ static java.awt.Point groundPoint(Client client,net.runelite.api.coords.WorldPoint tile){net.runelite.api.coords.LocalPoint local=net.runelite.api.coords.LocalPoint.fromWorld(client,tile);if(local==null)return null;net.runelite.api.Point point=net.runelite.api.Perspective.localToCanvas(client,local,client.getPlane());if(point==null)return null;java.awt.Point p=new java.awt.Point(point.getX(),point.getY());Rectangle viewport=new Rectangle(client.getViewportXOffset(),client.getViewportYOffset(),client.getViewportWidth(),client.getViewportHeight());if(!viewport.contains(p))return null;for(WidgetInfo info:new WidgetInfo[]{WidgetInfo.INVENTORY,net.runelite.api.Prayer.PROTECT_FROM_MAGIC.getWidgetInfo(),WidgetInfo.CHATBOX}){Widget widget=client.getWidget(info);if(effectivelyVisible(widget)&&widget.getBounds()!=null&&widget.getBounds().contains(p))return null;int depth=0;for(Widget panel=widget;panel!=null&&depth++<8;panel=panel.getParent()){Rectangle bounds=panel.getBounds();if(effectivelyVisible(panel)&&bounds!=null&&bounds.width<=400&&bounds.height<=500&&bounds.contains(p))return null;}}return p;}
+ boolean clickGround(Client client,net.runelite.api.coords.WorldPoint tile){java.awt.Point p=groundPoint(client,tile);if(p==null||!claim())return false;dispatchClick(client,canvasPoint(client,p));return true;}
+ boolean zoomOut(Client client){if(!claim())return false;java.awt.Point p=canvasPoint(client,new java.awt.Point(client.getViewportXOffset()+client.getViewportWidth()/2,client.getViewportYOffset()+client.getViewportHeight()/2));java.awt.Canvas canvas=client.getCanvas();java.awt.EventQueue.invokeLater(()->{if(canvas.isShowing()&&canvas.isFocusOwner())canvas.dispatchEvent(new java.awt.event.MouseWheelEvent(canvas,java.awt.event.MouseEvent.MOUSE_WHEEL,System.currentTimeMillis(),0,p.x,p.y,0,false,java.awt.event.MouseWheelEvent.WHEEL_UNIT_SCROLL,1,3));});return true;}
+ boolean clickWidget(Client client,Widget widget){return effectivelyVisible(widget)&&clickBounds(client,widget.getBounds());}
+ boolean clickBounds(Client client,Rectangle bounds){if(!validLogicalBounds(client,bounds)||!claim())return false;dispatchClick(client,canvasPoint(client,new java.awt.Point((int)bounds.getCenterX(),(int)bounds.getCenterY())));return true;}
+ boolean escape(Client client){if(client.getCanvas()==null||!claim())return false;java.awt.Canvas canvas=client.getCanvas();java.awt.EventQueue.invokeLater(()->{if(!canvas.isShowing()||!canvas.isFocusOwner())return;long now=System.currentTimeMillis();for(int id:new int[]{java.awt.event.KeyEvent.KEY_PRESSED,java.awt.event.KeyEvent.KEY_RELEASED})canvas.dispatchEvent(new java.awt.event.KeyEvent(canvas,id,now,0,java.awt.event.KeyEvent.VK_ESCAPE,java.awt.event.KeyEvent.CHAR_UNDEFINED));});return true;}
+ boolean ready(Tab tab){return ready(tab,0);}
+ boolean ready(Tab tab,int priority){int now=cycle.getAsInt();if(now==used)return false;
+  if(requested!=null&&requested!=tab&&!open.test(requested)&&now-lastOpen<5){if(priority<=requestedPriority){status="Waiting for requested "+requested+" content before another tab switch.";return false;}return request(tab,priority,now);}
+  if(!open.test(tab)){if(requested==tab&&now>=lastOpen&&now-lastOpen<5)return false;return request(tab,priority,now);}
+  used=now;requested=null;status="Visible "+tab+" action.";return true;
+ }
+ private boolean request(Tab tab,int priority,int now){requested=tab;requestedPriority=priority;lastOpen=now;used=now;try{click.accept(tab);status="Opening "+tab+"; waiting for actual selection and visible content.";}catch(RuntimeException e){status="Cannot open "+tab+": "+e.getMessage()+". Observer continues; interface will be retried.";}return false;}
+}

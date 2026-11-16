@@ -1,0 +1,13 @@
+SLAYER_DIAGNOSTIC_V2
+event=STOP Test F9 equivalent
+tick=10
+kills=0
+goal=1
+running=true
+hp=0
+prayer=0
+automaticProfile=false
+profiledNpcId=11
+attackStyle=none
+offensivePrayer=none
+defensivePrayer=none

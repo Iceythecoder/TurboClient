@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "policy": "Game rules are fixed; improve agent decisions/training only.",
+  "eligible_baseline": "build/stage3-baselines/2026-10-14-native-boosts-1.0.4",
+  "simulation_policy": "fixed_pre_dd_native_rules_v1",
+  "ineligible_prior_results": "Earlier custom-routing Stage 3 baselines remain historical only; do not use for normal-rule demonstrations, training or promotion.",
+  "safeguards": [
+    "Pinned src/ files must match renderer-provenance hashes",
+    "State-mutating bridge helpers must match preserved pre-DD worker.ts",
+    "Same action sequences must produce original-rule outcomes",
+    "No forced movement, damage, healing, resource, freeze, range, or cooldown overrides to help the agent win"
+  ],
+  "eligible_historical_baselines": [
+    "build/stage3-baselines/2026-10-14-restored-rules-1.0.3"
+  ]
+}

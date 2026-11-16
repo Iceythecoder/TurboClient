@@ -1,0 +1,16 @@
+{
+  "python": "3.12.15",
+  "device": "cpu",
+  "packages": {
+    "torch": "2.14.1+cpu",
+    "stable-baselines3": "2.9.0",
+    "sb3-contrib": "2.9.0",
+    "gymnasium": "1.4.0",
+    "numpy": "2.5.3"
+  },
+  "algorithms": [
+    "PPO",
+    "RecurrentPPO"
+  ],
+  "orion_trained_policy_installed": false
+}
