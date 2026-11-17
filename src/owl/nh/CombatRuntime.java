@@ -26,7 +26,7 @@ public final class CombatRuntime {
  final ChambersDemonstration demonstration;
  net.runelite.client.ui.overlay.infobox.InfoBoxManager infoBoxes;net.runelite.client.game.ItemManager itemManager;com.openosrs.client.game.NPCManager npcManager;net.runelite.client.plugins.grounditems.GroundItemsConfig groundItemsConfig;net.runelite.client.plugins.lootfilters.LootFiltersPlugin lootFiltersPlugin;
  final OlmConnectionTrace connectionTrace=new OlmConnectionTrace();final OlmFighter olm;final OlmLoopController olmLoop;
- final UsageReporting usage;final ToaFeature toa;final TobFeature tob;final VisibleCombatUi combatUi;final RaidInputBridge raidInputBridge;final KioskPrivacy privacy;final SlayerController slayer;private AdminRecorderWindow admin;
+ final UsageReporting usage;final ToaFeature toa;final TobFeature tob;final GauntletFeature gauntlet;final VisibleCombatUi combatUi;final RaidInputBridge raidInputBridge;final KioskPrivacy privacy;final SlayerController slayer;private AdminRecorderWindow admin;
  public volatile boolean armed;private boolean waitingForFocus,controlAtArm;private long armedAt;public volatile String display="Waiting for login and first GameTick",log="";public volatile String[] overlayLines={"Orion NH: observation only"};
  private int lastDecisionTick=-1;private Protection previous=Protection.UNKNOWN;private Style lastIntent=Style.UNKNOWN;private boolean pendingReevaluation;
  private JFrame panel;private NhOverlay overlay;private volatile boolean overlayRegistered;public volatile String overlayStatus="Not attached";private final EventBus bus;private final OverlayManager overlays;
@@ -45,7 +45,7 @@ public final class CombatRuntime {
   chambers=new ChambersController(client,net.unethicalite.api.widgets.Prayers::toggle,()->combatUi.ready(net.unethicalite.api.widgets.Tab.PRAYER,100));
   chambers.verifiedOutput(prayer->combatUi.activatePrayer(client,prayer));
   demonstration=new ChambersDemonstration(client);
-  olm=new OlmFighter(this);olmLoop=new OlmLoopController(this);slayer=new SlayerController(this);toa=new ToaFeature(this);tob=new TobFeature(this);
+  olm=new OlmFighter(this);olmLoop=new OlmLoopController(this);slayer=new SlayerController(this);toa=new ToaFeature(this);tob=new TobFeature(this);gauntlet=new GauntletFeature(this);
  }
  static java.io.File projectRoot(){String configured=System.getProperty("owl.project.root");if(configured!=null&&!configured.trim().isEmpty())return new java.io.File(configured);try{java.io.File code=new java.io.File(Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI());return code.isFile()?code.getParentFile():new java.io.File(System.getProperty("user.dir"));}catch(Exception error){return new java.io.File(System.getProperty("user.dir"));}}
  public void attach() {
@@ -61,12 +61,12 @@ public final class CombatRuntime {
    // matching the client's normal plugin lifecycle; HUD failure must not block UI.
    try{overlays.add(overlay);overlayRegistered=true;overlayStatus="Attached";}catch(RuntimeException hudError){overlayStatus="Unavailable: "+hudError.getClass().getSimpleName();try{overlays.remove(overlay);}catch(RuntimeException ignored){}overlayRegistered=false;}
    try{privacy.attach(overlays);overlays.add(slayer.overlay);}catch(RuntimeException maskingError){privacy.status="Unavailable - restart Turbo Client";Bootstrap.report(maskingError);}
-   try{String mode=System.getProperty("owl.client.mode","all").trim().toLowerCase(java.util.Locale.ROOT);if(mode.equals("admin")){admin=new AdminRecorderWindow(client,thread,bus,projectRoot().toPath());panel=admin;}else panel=mode.equals("all")&&SlayerLaunchRequest.consume(projectRoot().toPath())?slayer.window():new PrototypePanel(this);panel.setVisible(true);ready.run();}catch(RuntimeException error){armed=false;agent.close();failed.accept(error);}
+   try{String mode=System.getProperty("owl.client.mode","all").trim().toLowerCase(java.util.Locale.ROOT);if(mode.equals("admin")){admin=new AdminRecorderWindow(client,thread,bus,projectRoot().toPath());panel=admin;}else panel=mode.equals("all")&&SlayerLaunchRequest.consume(projectRoot().toPath())?slayer.window():new PrototypePanel(this);panel.setVisible(true);if(mode.equals("gauntlet")){Window gauntletWindow=gauntlet.window(panel);gauntletWindow.setVisible(true);gauntletWindow.toFront();panel.setVisible(false);}ready.run();}catch(RuntimeException error){armed=false;agent.close();failed.accept(error);}
   });
  }
  String raidGearSnapshot(){Map<String,java.util.List<Integer>> gear=new LinkedHashMap<>();for(Style style:new Style[]{Style.MAGIC,Style.MELEE,Style.RANGED,Style.SPEC})gear.put(style.name(),new ArrayList<>(config.gear.get(style)));if(gear.values().stream().allMatch(java.util.List::isEmpty))try{java.nio.file.Path root=projectRoot().toPath();String saved=OlmAttemptStore.latest(root);if(saved==null&&java.nio.file.Files.isRegularFile(root.resolve("profiles/olm-profile.json")))saved=java.nio.file.Files.readString(root.resolve("profiles/olm-profile.json"));if(saved!=null){OlmPresetStore.Loaded validated=OlmPresetStore.parse(saved);com.google.gson.JsonObject observed=new com.google.gson.JsonParser().parse(validated.json).getAsJsonObject().getAsJsonObject("observedGear");for(String style:gear.keySet())if(observed.has(style)){gear.get(style).clear();for(com.google.gson.JsonElement id:observed.getAsJsonArray(style))gear.get(style).add(id.getAsInt());}}}catch(Exception ignored){}return new com.google.gson.Gson().toJson(gear);}
  net.runelite.client.eventbus.EventBus busForModules(){return bus;}
- public void stop(String reason) {if(toa!=null)toa.stop(reason);if(tob!=null)tob.stop(reason);combatUi.stopUi();slayer.stop(reason);armed=false;chambers.stop(reason);demonstration.stop(reason);olm.stop(reason);waitingForFocus=false;controlAtArm=false;autoLock.clear();scheduler.cancel(reason);attacks.reset();agent.resetContext();OrionAdapter.AttackStamp.submittedAt=Long.MAX_VALUE;telemetry.event(ticks,reason);updateDisplay();}
+ public void stop(String reason) {if(toa!=null)toa.stop(reason);if(tob!=null)tob.stop(reason);if(gauntlet!=null)gauntlet.stop(reason);combatUi.stopUi();slayer.stop(reason);armed=false;chambers.stop(reason);demonstration.stop(reason);olm.stop(reason);waitingForFocus=false;controlAtArm=false;autoLock.clear();scheduler.cancel(reason);attacks.reset();agent.resetContext();OrionAdapter.AttackStamp.submittedAt=Long.MAX_VALUE;telemetry.event(ticks,reason);updateDisplay();}
  public void setAutoLock(boolean enabled){stop("Auto-lock "+(enabled?"enabled; attack a player to acquire them":"disabled"));config.autoLock=enabled;}
  @Subscribe public void onMenuOptionClicked(MenuOptionClicked event) {
   slayer.menu(event);if(event.isConsumed())return;demonstration.menu(event);
@@ -101,7 +101,7 @@ public final class CombatRuntime {
   if(!disposing.compareAndSet(false,true))return;
   armed=false;chambers.armed=false;olm.running=false;
   try{usage.close();agent.close();nhTraining.close();agentPrompt="";agentNotes="";KeyboardFocusManager.getCurrentKeyboardFocusManager().removeKeyEventDispatcher(stopKey);
-   thread.invoke(()->{try{stop("Companion reload/close");if(admin!=null){admin.close();admin=null;}toa.close();tob.close();demonstration.clear();olm.close();chambers.close();chambers.forgetLocations();bus.unregister(this);
+   thread.invoke(()->{try{stop("Companion reload/close");if(admin!=null){admin.close();admin=null;}toa.close();tob.close();gauntlet.close();demonstration.clear();olm.close();chambers.close();chambers.forgetLocations();bus.unregister(this);
     SwingUtilities.invokeLater(()->{try{privacy.close(overlays);if(overlays!=null)overlays.remove(slayer.overlay);if(overlayRegistered&&overlays!=null)overlays.remove(overlay);overlayRegistered=false;if(panel!=null){closeOwned(panel);panel.dispose();}
      SwingUtilities.invokeLater(()->thread.invoke(()->disposed.complete(null)));
     }catch(Throwable e){disposed.completeExceptionally(e);}});

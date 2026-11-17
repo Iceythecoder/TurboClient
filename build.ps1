@@ -1,5 +1,5 @@
 param(
-    [ValidateSet('all','chambers','slayer','toa','tob','admin')]
+    [ValidateSet('all','chambers','slayer','toa','tob','gauntlet','admin')]
     [string]$Publish = 'all'
 )
 $ErrorActionPreference = 'Stop'
@@ -46,9 +46,11 @@ try {
 $slayerHostJar = Join-Path $releaseDirectory 'TurboSlayer.jar'
 $toaHostJar = Join-Path $releaseDirectory 'TurboTOAHost.jar'
 $adminHostJar = Join-Path $releaseDirectory 'TurboAdmin.jar'
+$gauntletHostJar = Join-Path $releaseDirectory 'TurboGauntletHost.jar'
 Copy-Item -LiteralPath $jarPath -Destination $slayerHostJar
 Copy-Item -LiteralPath $jarPath -Destination $toaHostJar
 Copy-Item -LiteralPath $jarPath -Destination $adminHostJar
+Copy-Item -LiteralPath $jarPath -Destination $gauntletHostJar
 $toaClasses=Join-Path $PSScriptRoot 'build\toa-classes'
 $toaSource=Join-Path $PSScriptRoot 'features\toa\src'
 if(!(Test-Path -LiteralPath $toaSource)){throw 'ToA module source is missing'}
@@ -72,6 +74,17 @@ if($LASTEXITCODE -ne 0){throw 'ToB module compilation failed'}
 $tobJar=Join-Path $releaseDirectory 'TurboTOB.jar'
 & (Join-Path $jdk 'jar.exe') cf $tobJar -C $tobClasses .
 if($LASTEXITCODE -ne 0){throw 'ToB module archive failed'}
+$gauntletClasses=Join-Path $PSScriptRoot 'build\gauntlet-classes'
+$gauntletSource=Join-Path $PSScriptRoot 'features\gauntlet\src'
+if(!(Test-Path -LiteralPath $gauntletSource)){throw 'Gauntlet module source is missing'}
+if(Test-Path -LiteralPath $gauntletClasses){Remove-Item -LiteralPath $gauntletClasses -Recurse -Force}
+New-Item -ItemType Directory -Path $gauntletClasses -Force|Out-Null
+$gauntletSources=@(Get-ChildItem -LiteralPath $gauntletSource -Filter '*.java' -Recurse|ForEach-Object FullName)
+& (Join-Path $jdk 'java.exe') -cp $classes CompileDriver "$clientJar;$classes" $gauntletClasses $gauntletSources
+if($LASTEXITCODE -ne 0){throw 'Gauntlet module compilation failed'}
+$gauntletJar=Join-Path $releaseDirectory 'TurboGauntlet.jar'
+& (Join-Path $jdk 'jar.exe') cf $gauntletJar -C $gauntletClasses .
+if($LASTEXITCODE -ne 0){throw 'Gauntlet module archive failed'}
 $java = Join-Path $env:LOCALAPPDATA 'Orion\jre\bin\java.exe'
 $taskTemporary = Join-Path $PSScriptRoot 'build'
 & $java "-Djava.io.tmpdir=$taskTemporary" "-Dlogback.configurationFile=$PSScriptRoot\prototype-logback.xml" "-Dowl.project.root=$PSScriptRoot" -cp "$jarPath;$clientJar" owl.nh.Bootstrap --self-test
@@ -82,6 +95,8 @@ if ($LASTEXITCODE -ne 0) { throw 'ToA module checks failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'ToA combat policy checks failed.' }
 & $java "-Dlogback.configurationFile=$PSScriptRoot\prototype-logback.xml" -cp "$tobJar;$clientJar" turbo.tob.TobModuleTests
 if ($LASTEXITCODE -ne 0) { throw 'ToB module checks failed.' }
+& $java "-Dlogback.configurationFile=$PSScriptRoot\prototype-logback.xml" -cp "$gauntletJar;$jarPath;$clientJar" turbo.gauntlet.GauntletStateTests
+if ($LASTEXITCODE -ne 0) { throw 'Gauntlet module checks failed.' }
 & $java "-Dlogback.configurationFile=$PSScriptRoot\prototype-logback.xml" -cp "$toaJar;$jarPath;$clientJar" turbo.raid.RaidSetupTests
 if ($LASTEXITCODE -ne 0) { throw 'Raid setup checks failed.' }
 $compiler = Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319\csc.exe'
@@ -91,7 +106,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Launcher checks compilation failed.' }
 if ($LASTEXITCODE -ne 0) { throw 'Launcher reload checks failed.' }
 $launcherIcon = Join-Path $PSScriptRoot 'assets\turbo-client.ico'
 $iconArguments = @(); if (Test-Path -LiteralPath $launcherIcon) { $iconArguments += "/win32icon:$launcherIcon" }
-foreach ($launcherName in @('Turbo Chambers.exe','Turbo Slayer.exe','Turbo TOA.exe','Turbo Admin Tool.exe')) {
+foreach ($launcherName in @('Turbo Chambers.exe','Turbo Slayer.exe','Turbo TOA.exe','Turbo Gauntlet.exe','Turbo Admin Tool.exe')) {
     $launcherOutput = Join-Path $PSScriptRoot $launcherName
     & $compiler /nologo /target:winexe /r:System.Windows.Forms.dll @iconArguments "/out:$launcherOutput" "$PSScriptRoot\Launcher.cs"
     if ($LASTEXITCODE -ne 0) { throw "$launcherName compilation failed." }
@@ -103,6 +118,7 @@ $relativeClient = $clientJar.Substring($PSScriptRoot.Length+1)
 $relativeSlayerHost = $slayerHostJar.Substring($PSScriptRoot.Length+1)
 $relativeToaHost = $toaHostJar.Substring($PSScriptRoot.Length+1)
 $relativeAdminHost = $adminHostJar.Substring($PSScriptRoot.Length+1)
+$relativeGauntletHost = $gauntletHostJar.Substring($PSScriptRoot.Length+1)
 if ($Publish -in @('all','chambers')) {
     [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-current.txt'),$relativeJar)
     [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-chambers.txt'),$relativeJar)
@@ -122,11 +138,17 @@ if ($Publish -in @('all','tob')) {
     [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-tob.txt'),$tobJar.Substring($PSScriptRoot.Length+1))
     Copy-Item -LiteralPath $tobJar -Destination (Join-Path $PSScriptRoot 'TurboTOB.jar') -Force
 }
+if ($Publish -in @('all','gauntlet')) {
+    [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-gauntlet-host.txt'),$relativeGauntletHost)
+    [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-gauntlet.txt'),$gauntletJar.Substring($PSScriptRoot.Length+1))
+    Copy-Item -LiteralPath $gauntletHostJar -Destination (Join-Path $PSScriptRoot 'TurboGauntletHost.jar') -Force
+    Copy-Item -LiteralPath $gauntletJar -Destination (Join-Path $PSScriptRoot 'TurboGauntlet.jar') -Force
+}
 if ($Publish -in @('all','admin')) {
     [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-admin.txt'),$relativeAdminHost)
     Copy-Item -LiteralPath $adminHostJar -Destination (Join-Path $PSScriptRoot 'TurboAdmin.jar') -Force
 }
 [System.IO.File]::WriteAllText((Join-Path $PSScriptRoot 'release-runtime.txt'),$relativeClient)
 Write-Output ('Build and checks passed. Published mode: ' + $Publish)
-Write-Output 'Use Turbo Chambers.exe, Turbo Slayer.exe, Turbo TOA.exe, or Turbo Admin Tool.exe. Turbo Client.exe remains a Chambers-compatible shortcut.'
+Write-Output 'Use Turbo Chambers.exe, Turbo Slayer.exe, Turbo TOA.exe, Turbo Gauntlet.exe, or Turbo Admin Tool.exe. Turbo Client.exe remains a Chambers-compatible shortcut.'
 

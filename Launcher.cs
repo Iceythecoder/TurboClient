@@ -17,10 +17,11 @@ class Launcher {
   string requested=null;
   foreach(string arg in args)if(arg.StartsWith("--mode=",StringComparison.OrdinalIgnoreCase))requested=arg.Substring(7).Trim().ToLowerInvariant();
   string executable=Path.GetFileNameWithoutExtension(Application.ExecutablePath).ToLowerInvariant();
-  if(String.IsNullOrEmpty(requested))requested=executable.Contains("admin")?"admin":executable.Contains("slayer")?"slayer":executable.Contains("toa")?"toa":"chambers";
+  if(String.IsNullOrEmpty(requested))requested=executable.Contains("admin")?"admin":executable.Contains("slayer")?"slayer":executable.Contains("gauntlet")?"gauntlet":executable.Contains("toa")?"toa":"chambers";
   if(requested=="admin")return new LaunchMode("admin","release-admin.txt","runtime/companion-session-admin.txt","TurboAdmin.jar","Turbo Admin Tool startup");
   if(requested=="slayer")return new LaunchMode("slayer","release-slayer.txt","runtime/companion-session-slayer.txt","TurboSlayer.jar","Turbo Slayer startup");
   if(requested=="toa")return new LaunchMode("toa","release-toa-host.txt","runtime/companion-session-toa.txt","TurboTOAHost.jar","Turbo TOA startup");
+  if(requested=="gauntlet")return new LaunchMode("gauntlet","release-gauntlet-host.txt","runtime/companion-session-gauntlet.txt","TurboGauntletHost.jar","Turbo Gauntlet startup");
   if(requested!="chambers")throw new Exception("Unknown Turbo feature mode: "+requested);
   return new LaunchMode("chambers","release-chambers.txt","runtime/companion-session-chambers.txt","TurboChambers.jar","Turbo Chambers startup");
  }
@@ -73,8 +74,8 @@ class Launcher {
  }
  static void Check(bool value,string name){if(!value)throw new Exception("Launcher check failed: "+name);}
  static void SelfTest(){
-  LaunchMode chambers=Mode(new[]{"--mode=chambers"}),slayer=Mode(new[]{"--mode=slayer"}),toa=Mode(new[]{"--mode=toa"}),admin=Mode(new[]{"--mode=admin"});
-  Check(chambers.Pointer!=slayer.Pointer&&slayer.Pointer!=toa.Pointer&&toa.Pointer!=admin.Pointer&&chambers.Session!=slayer.Session&&slayer.Session!=toa.Session&&toa.Session!=admin.Session,"features use distinct release pointers and session files");
+  LaunchMode chambers=Mode(new[]{"--mode=chambers"}),slayer=Mode(new[]{"--mode=slayer"}),toa=Mode(new[]{"--mode=toa"}),gauntlet=Mode(new[]{"--mode=gauntlet"}),admin=Mode(new[]{"--mode=admin"});
+  Check(chambers.Pointer!=slayer.Pointer&&slayer.Pointer!=toa.Pointer&&toa.Pointer!=gauntlet.Pointer&&gauntlet.Pointer!=admin.Pointer&&chambers.Session!=slayer.Session&&slayer.Session!=toa.Session&&toa.Session!=gauntlet.Session&&gauntlet.Session!=admin.Session,"features use distinct release pointers and session files");
   Check(MutexName("C:\\Turbo","chambers")!=MutexName("C:\\Turbo","slayer"),"features use distinct launcher gates");
   string root=Path.Combine(Path.GetTempPath(),"owl-launcher-check-"+Guid.NewGuid().ToString("N"));Directory.CreateDirectory(Path.Combine(root,"runtime"));var listener=new TcpListener(IPAddress.Loopback,0);listener.Start();Exception workerError=null;
   try {int port=((IPEndPoint)listener.LocalEndpoint).Port;string token=new string('x',43);string file=Path.Combine(root,chambers.Session.Replace('/',Path.DirectorySeparatorChar));File.WriteAllText(file,"OWL_RELOAD_V1\n"+Process.GetCurrentProcess().Id+"\n"+port+"\n"+token+"\n");
